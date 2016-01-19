@@ -29,7 +29,7 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<RecipeViewHolder, I
     @Override
     public IngredientViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
         View ingredientView = mInflator.inflate(R.layout.ingredient_view, childViewGroup, false);
-        return new IngredientViewHolder(ingredientView);
+        return new IngredientViewHolder(ingredientView, this);
     }
 
     @Override

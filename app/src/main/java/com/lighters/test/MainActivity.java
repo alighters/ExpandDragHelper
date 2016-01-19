@@ -5,12 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Toast;
 
 import com.lighters.library.expanddrag.Adapter.ExpandableRecyclerAdapter;
-import com.lighters.library.expanddrag.callback.SimpleItemTouchHelperCallback;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+//        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+//        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
             @Override
