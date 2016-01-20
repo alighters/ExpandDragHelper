@@ -10,10 +10,12 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -46,7 +48,7 @@ import java.util.List;
  */
 public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ParentViewHolder
-        .ParentListItemExpandCollapseListener, View.OnDragListener, View.OnLongClickListener {
+        .ParentListItemExpandCollapseListener, View.OnDragListener, View.OnLongClickListener, View.OnTouchListener {
 
     private static final String EXPANDED_STATE_MAP = "ExpandableRecyclerAdapter.ExpandedStateMap";
     private static final int TYPE_PARENT = 0;
@@ -191,6 +193,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             onBindChildViewHolder((CVH) holder, position, listItem);
             holder.itemView.setTag(position);
             holder.itemView.setOnLongClickListener(this);
+            holder.itemView.setOnTouchListener(this);
         }
     }
 
@@ -623,6 +626,26 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             }
 
             collapseParentListItem(parentWrapper, parentIndex, false);
+        }
+    }
+
+    /**
+     * Calls through to the ParentViewHolder to collapse views for each
+     * RecyclerView a specified parent is a child of.
+     * <p/>
+     * These calls to the ParentViewHolder are made so that animations can be
+     * triggered at the ViewHolder level.
+     *
+     * @param parentIndex The index of the parent to collapse
+     */
+    private void collapseParentViews(ParentWrapper parentWrapper, int parentIndex) {
+        PVH viewHolder;
+        for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
+            viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
+            if (viewHolder != null && viewHolder.isExpanded()) {
+                viewHolder.setExpanded(false);
+                viewHolder.onExpansionToggled(true);
+            }
         }
     }
 
@@ -1297,6 +1320,19 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         // the already-created item. This will create a new ClipDescription object within the
         // ClipData, and set its MIME type entry to "text/plain"
 
+
+        collapseAllParents();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < getItemCount(); i++) {
+                    if (mItemList.get(i) instanceof ParentWrapper) {
+                        collapseParentViews(((ParentWrapper) mItemList.get(i)), i);
+                    }
+                }
+            }
+        }, 100);
+
         int fromPosition = Integer.valueOf(v.getTag().toString());
 
         int fromParentPosition = 0;
@@ -1327,7 +1363,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         ClipData dragData = ClipData.newIntent(FROM_POSITION_DATA, intent);
 
         // Instantiates the drag shadow builder.
-        View.DragShadowBuilder myShadow = new MyDragShadowBuilder(v);
+        View.DragShadowBuilder myShadow = new MyDragShadowBuilder(v, mTouchX, mTouchY);
 
         // Starts the drag
 
@@ -1336,7 +1372,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 null,      // no need to use local data
                 0          // flags (not currently used, set to 0)
         );
-        collapseAllParents();
         return true;
     }
 
@@ -1344,20 +1379,25 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
         // The drag shadow image, defined as a drawable thing
         private Drawable shadow;
+        private float mTouchX;
+        private float mTouchY;
 
         // Defines the constructor for myDragShadowBuilder
-        public MyDragShadowBuilder(View v) {
+        public MyDragShadowBuilder(View v, float touchX, float touchY) {
 
             // Stores the View parameter passed to myDragShadowBuilder.
             super(v);
 
             // Creates a draggable image that will fill the Canvas provided by the system.
-//            shadow = new ColorDrawable(Color.LTGRAY);
+//            shadow = new ColorDrawable(Color.LTGRAY);z
             v.setDrawingCacheEnabled(true);
             v.buildDrawingCache();
             Bitmap bitmap = Bitmap.createBitmap(v.getDrawingCache());
             shadow = new BitmapDrawable(bitmap);
             v.setDrawingCacheEnabled(false);
+
+            mTouchX = touchX;
+            mTouchY = touchY;
         }
 
         // Defines a callback that sends the drag shadow dimensions and touch point back to the
@@ -1384,7 +1424,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             size.set(width, height);
 
             // Sets the touch point's position to be in the middle of the drag shadow
-            touch.set(width / 2, height / 2);
+            touch.set((int) (mTouchX - 20), (int) (mTouchY - 20));
         }
 
         // Defines a callback that draws the drag shadow in a Canvas that the system constructs
@@ -1397,4 +1437,17 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         }
     }
 
+    private float mTouchX = 0;
+    private float mTouchY = 0;
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mTouchX = event.getX();
+                mTouchY = event.getY();
+                break;
+        }
+        return false;
+    }
 }
