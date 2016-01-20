@@ -76,7 +76,7 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
     /**
      * Callback triggered when expansion state is changed, but not during
      * initialization.
-     * <p>
+     * <p/>
      * Useful for implementing animations on expansion.
      *
      * @param expanded true if view is expanded before expansion is toggled,
@@ -89,14 +89,14 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
     /**
      * 选中当前View
      */
-    public void onSelected(){
+    public void onSelected() {
 
     }
 
     /**
      * 不选中当前View
      */
-    public void onUnSelected(){
+    public void onUnSelected() {
 
     }
 
@@ -112,16 +112,18 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
     /**
      * Setter for the {@link ParentListItemExpandCollapseListener} implemented in
      *
-     * @param parentListItemExpandCollapseListener The {@link ParentListItemExpandCollapseListener} to set on the {@link ParentViewHolder}
+     * @param parentListItemExpandCollapseListener The
+     *                                             {@link ParentListItemExpandCollapseListener} to set on the {@link ParentViewHolder}
      */
-    public void setParentListItemExpandCollapseListener(ParentListItemExpandCollapseListener parentListItemExpandCollapseListener) {
+    public void setParentListItemExpandCollapseListener(ParentListItemExpandCollapseListener
+                                                                parentListItemExpandCollapseListener) {
         mParentListItemExpandCollapseListener = parentListItemExpandCollapseListener;
     }
 
     /**
      * {@link View.OnClickListener} to listen for click events on
      * the entire parent {@link View}.
-     * <p>
+     * <p/>
      * Only registered if {@link #shouldItemViewClickToggleExpansion()} is true.
      *
      * @param v The {@link View} that is the trigger for expansion
@@ -138,7 +140,7 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
     /**
      * Used to determine whether a click in the entire parent {@link View}
      * should trigger row expansion.
-     * <p>
+     * <p/>
      * If you return false, you can call {@link #expandView()} to trigger an
      * expansion in response to a another event or {@link #collapseView()} to
      * trigger a collapse.

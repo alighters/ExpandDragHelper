@@ -2,14 +2,14 @@ package com.lighters.test;
 
 import com.lighters.library.expanddrag.Model.ParentListItem;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Recipe implements ParentListItem {
 
     private String mName;
-    private List<Ingredient> mIngredients;
+    private ArrayList<String> mIngredients;
 
-    public Recipe(String name, List<Ingredient> ingredients) {
+    public Recipe(String name, ArrayList<String> ingredients) {
         mName = name;
         mIngredients = ingredients;
     }
@@ -19,7 +19,7 @@ public class Recipe implements ParentListItem {
     }
 
     @Override
-    public List<?> getChildItemList() {
+    public ArrayList<String> getChildItemList() {
         return mIngredients;
     }
 

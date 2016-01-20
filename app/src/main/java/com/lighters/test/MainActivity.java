@@ -1,5 +1,6 @@
 package com.lighters.test;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.lighters.library.expanddrag.Adapter.ExpandableRecyclerAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,21 +25,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Ingredient beef = new Ingredient("beef");
-        Ingredient cheese = new Ingredient("cheese");
-        Ingredient salsa = new Ingredient("salsa");
-        Ingredient tortilla = new Ingredient("tortilla");
-        Ingredient ketchup = new Ingredient("ketchup");
-        Ingredient bun = new Ingredient("bun");
 
-        Recipe taco = new Recipe("taco", Arrays.asList(beef, cheese, salsa, tortilla, cheese, salsa, tortilla));
-        Recipe quesadilla = new Recipe("quesadilla", Arrays.asList(cheese, tortilla, cheese, ketchup, bun));
-        Recipe burger = new Recipe("burger", Arrays.asList(beef, cheese, ketchup, bun, tortilla, beef, salsa, cheese));
+        ArrayList<String> num1 = new ArrayList<>();
+        num1.add("01");
+        num1.add("02");
+        num1.add("03");
+        num1.add("04");
+        num1.add("05");
+        ArrayList<String> num2 = new ArrayList<>();
+        num2.add("11");
+        num2.add("12");
+        num2.add("13");
+        num2.add("14");
+        num2.add("15");
+        ArrayList<String> num3 = new ArrayList<>();
+        num3.add("21");
+        num3.add("22");
+        num3.add("23");
+        num3.add("24");
+        num3.add("25");
+        Recipe taco = new Recipe("taco", num1);
+        Recipe quesadilla = new Recipe("quesadilla", num2);
+        Recipe burger = new Recipe("burger", num3);
         final List<Recipe> recipes = Arrays.asList(taco, quesadilla, burger);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new RecipeAdapter(this, recipes);
-        mAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
+        mAdapter.setExpandDragListener(new ExpandableRecyclerAdapter.ExpandDragListener() {
             @Override
             public void onListItemExpanded(int position) {
                 Recipe expandedRecipe = recipes.get(position);
@@ -59,14 +73,42 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT)
                         .show();
             }
+
+            @Override
+            public void onListItemSelected(View view) {
+                view.setBackgroundColor(Color.RED);
+                view.invalidate();
+            }
+
+            @Override
+            public void onListItemUnSelected(View view) {
+                view.setBackgroundColor(Color.TRANSPARENT);
+                view.invalidate();
+            }
+
+            @Override
+            public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
+                                       int toParentPosition) {
+                Toast.makeText(MainActivity.this,
+                        "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
+                                + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
+                                toParentPosition,
+                        Toast.LENGTH_SHORT)
+                        .show();
+                Recipe recipe = recipes.get(fromParentPosition);
+                String ingredient = recipe.getChildItemList().get(fromChildPositionOfParent);
+                recipe.getChildItemList().remove(ingredient);
+                if (ingredient != null) {
+                    recipes.get(toParentPosition).getChildItemList().add(0, ingredient);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
         });
 
         recyclerView.setAdapter(mAdapter);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-//        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +133,5 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         mAdapter.onRestoreInstanceState(savedInstanceState);
     }
-
 
 }

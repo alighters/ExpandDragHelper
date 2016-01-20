@@ -29,7 +29,7 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<RecipeViewHolder, I
     @Override
     public IngredientViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
         View ingredientView = mInflator.inflate(R.layout.ingredient_view, childViewGroup, false);
-        return new IngredientViewHolder(ingredientView, this);
+        return new IngredientViewHolder(ingredientView);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<RecipeViewHolder, I
 
     @Override
     public void onBindChildViewHolder(IngredientViewHolder ingredientViewHolder, int position, Object childListItem) {
-        Ingredient ingredient = (Ingredient) childListItem;
+        String ingredient = (String) childListItem;
         ingredientViewHolder.bind(ingredient);
     }
 }
