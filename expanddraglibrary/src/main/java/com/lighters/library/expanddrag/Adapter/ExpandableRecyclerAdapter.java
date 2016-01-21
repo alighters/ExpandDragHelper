@@ -23,7 +23,11 @@ import android.view.ViewGroup;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.library.expanddrag.Model.ParentWrapper;
 import com.lighters.library.expanddrag.ViewHolder.ChildViewHolder;
+import com.lighters.library.expanddrag.ViewHolder.LoadMoreViewHolder;
 import com.lighters.library.expanddrag.ViewHolder.ParentViewHolder;
+import com.lighters.library.expanddrag.callback.DragSelectCallback;
+import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
+import com.lighters.library.expanddrag.callback.LoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,16 +51,17 @@ import java.util.List;
  * @version 1.0
  * @since 5/27/2015
  */
-public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder>
+public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, LVH
+        extends LoadMoreViewHolder>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ParentViewHolder
         .ParentListItemExpandCollapseListener, View.OnDragListener, View.OnLongClickListener, View.OnTouchListener {
 
     private static final String TAG = ExpandableRecyclerAdapter.class.getName() + "_tag";
-    ;
 
     private static final String EXPANDED_STATE_MAP = "ExpandableRecyclerAdapter.ExpandedStateMap";
     private static final int TYPE_PARENT = 0;
     private static final int TYPE_CHILD = 1;
+    private static final int TYPE_LOAD_MORE = 2;
 
     private static final String FROM_POSITION = "from_position";
     private static final String FROM_PARENT_POSITION = "from_parent_position";
@@ -71,57 +76,10 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     protected List<Object> mItemList;
 
     private List<? extends ParentListItem> mParentItemList;
-    private ExpandDragListener mExpandDragListener;
+    private ExpandCollapseListener mExpandCollapseListener;
+    private DragSelectCallback mDragSelectCallback;
+    private LoadMoreListener mLoadMoreListener;
     private List<RecyclerView> mAttachedRecyclerViewPool;
-
-    /**
-     * Allows objects to register themselves as expand/collapse listeners to be
-     * notified of change events.
-     * <p/>
-     * Implement this in your {@link Activity} or {@link android.app.Fragment}
-     * to receive these callbacks.
-     */
-    public interface ExpandDragListener {
-
-        /**
-         * Called when a list item is expanded.
-         *
-         * @param position The index of the item in the list being expanded
-         */
-        void onListItemExpanded(int position);
-
-        /**
-         * Called when a list item is collapsed.
-         *
-         * @param position The index of the item in the list being collapsed
-         */
-        void onListItemCollapsed(int position);
-
-        /**
-         * Called when a list item is selected when drag.
-         *
-         * @param view The view of the item in the list being selected
-         */
-        void onListItemSelected(View view);
-
-        /**
-         * Called when a list item is unselected when drag.
-         *
-         * @param view The view of the item in the list being unselected
-         */
-        void onListItemUnSelected(View view);
-
-        /**
-         * Called when the drag proceudure is stopped
-         *
-         * @param fromTotalPosition
-         * @param fromParentPosition
-         * @param fromChildPositionOfParent
-         * @param toParentPosition
-         */
-        void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent, int
-                toParentPosition);
-    }
 
     /**
      * Primary constructor. Sets up {@link #mParentItemList} and {@link #mItemList}.
@@ -160,6 +118,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             return pvh;
         } else if (viewType == TYPE_CHILD) {
             return onCreateChildViewHolder(viewGroup);
+        } else if (viewType == TYPE_LOAD_MORE) {
+            return onCreateLoadMoreViewHolder(viewGroup);
         } else {
             throw new IllegalStateException("Incorrect ViewType found");
         }
@@ -191,6 +151,10 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             ParentWrapper parentWrapper = (ParentWrapper) listItem;
             parentViewHolder.setExpanded(parentWrapper.isExpanded());
             onBindParentViewHolder(parentViewHolder, position, parentWrapper.getParentListItem());
+        } else if (listItem != null && listItem instanceof String && listItem.toString().contains
+                (ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX)) {
+            onBindLoadMoreViewHolder((LVH) holder, position, listItem);
+
         } else if (listItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
         } else {
@@ -222,6 +186,10 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * {@code ViewGroup} childViewGroup
      */
     public abstract CVH onCreateChildViewHolder(ViewGroup childViewGroup);
+
+    public abstract LVH onCreateLoadMoreViewHolder(ViewGroup viewGroup);
+
+    public abstract void onBindLoadMoreViewHolder(LVH viewHolder, int position, Object object);
 
     /**
      * Callback called from onBindViewHolder(RecyclerView.ViewHolder, int)
@@ -272,6 +240,9 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         Object listItem = getListItem(position);
         if (listItem instanceof ParentWrapper) {
             return TYPE_PARENT;
+        } else if (listItem instanceof String && listItem.toString().contains(ExpandableRecyclerAdapterHelper
+                .PARENT_LOAD_MORE_PREFIX)) {
+            return TYPE_LOAD_MORE;
         } else if (listItem == null) {
             throw new IllegalStateException("Null object added");
         } else {
@@ -355,11 +326,32 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         mAttachedRecyclerViewPool.remove(recyclerView);
     }
 
-    public void setExpandDragListener(ExpandDragListener expandDragListener) {
-        mExpandDragListener = expandDragListener;
+    /****
+     * 设置收起展开Listener
+     *
+     * @param expandCollapseListener
+     */
+    public void setExpandCollapseListener(ExpandCollapseListener expandCollapseListener) {
+        mExpandCollapseListener = expandCollapseListener;
     }
 
-    // region Programmatic Expansion/Collapsing
+    /**
+     * 设置拖拽选中回调
+     *
+     * @param dragSelectCallback
+     */
+    public void setDragSelectCallback(DragSelectCallback dragSelectCallback) {
+        mDragSelectCallback = dragSelectCallback;
+    }
+
+    /**
+     * 设置加载更多地回调
+     *
+     * @param loadMoreListener
+     */
+    public void setLoadMoreListener(LoadMoreListener loadMoreListener) {
+        mLoadMoreListener = loadMoreListener;
+    }
 
     /**
      * Expands the parent with the specified index in the list of parents.
@@ -424,18 +416,18 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     public void expandAllParents(int fromParenIndex) {
         if (fromParenIndex >= 0 && fromParenIndex < mParentItemList.size()) {
             expandParent(fromParenIndex);
-            Log.d("position", "expand=" + fromParenIndex);
+            Log.d(TAG, "expand=" + fromParenIndex);
         }
         int scrollPosition = 0;
         for (int i = 0; i < mParentItemList.size(); i++) {
             if (i < fromParenIndex) {
                 expandParent(i);
-                Log.d("position", "expand=" + fromParenIndex);
+                Log.d(TAG, "expand=" + fromParenIndex);
                 scrollPosition += mParentItemList.get(i).getChildItemList().size() + i;
-                Log.d("position", "scrollTo=" + scrollPosition);
+                Log.d(TAG, "scrollTo=" + scrollPosition);
                 scrollToPosition(scrollPosition);
             } else {
-                Log.d("position", "expand=" + fromParenIndex);
+                Log.d(TAG, "expand=" + fromParenIndex);
                 expandParent(i);
             }
         }
@@ -570,8 +562,12 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                     for (int j = 0; j < childListItemCount; j++) {
                         parentWrapperList.add(parentWrapper.getChildItemList().get(j));
                     }
+
+                    if (parentListItem.isLoadMore())
+                        parentWrapperList.add(ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX + i);
                 }
             }
+
         }
 
         mItemList = parentWrapperList;
@@ -661,7 +657,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     /**
      * Expands a specified parent item. Calls through to the
-     * ExpandDragListener and adds children of the specified parent to the
+     * ExpandCollapseListener and adds children of the specified parent to the
      * total list of items.
      *
      * @param parentWrapper                     The ParentWrapper of the parent to expand
@@ -680,20 +676,24 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 for (int i = 0; i < childListItemCount; i++) {
                     mItemList.add(parentIndex + i + 1, childItemList.get(i));
                 }
+                if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
+                    mItemList.add(ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX + parentIndex);
+                    childListItemCount += 1;
+                }
 
                 notifyItemRangeInserted(parentIndex + 1, childListItemCount);
             }
 
-            if (expansionTriggeredByListItemClick && mExpandDragListener != null) {
+            if (expansionTriggeredByListItemClick && mExpandCollapseListener != null) {
                 int expandedCountBeforePosition = getExpandedItemCount(parentIndex);
-                mExpandDragListener.onListItemExpanded(parentIndex - expandedCountBeforePosition);
+                mExpandCollapseListener.onListItemExpanded(parentIndex - expandedCountBeforePosition);
             }
         }
     }
 
     /**
      * Collapses a specified parent item. Calls through to the
-     * ExpandDragListener and adds children of the specified parent to the
+     * ExpandCollapseListener and adds children of the specified parent to the
      * total list of items.
      *
      * @param parentWrapper                    The ParentWrapper of the parent to collapse
@@ -709,16 +709,22 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             List<?> childItemList = parentWrapper.getChildItemList();
             if (childItemList != null) {
                 int childListItemCount = childItemList.size();
+
+
                 for (int i = childListItemCount - 1; i >= 0; i--) {
                     mItemList.remove(parentIndex + i + 1);
+                }
+                if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
+                    mItemList.remove(parentIndex + 1);
+                    childListItemCount += 1;
                 }
 
                 notifyItemRangeRemoved(parentIndex + 1, childListItemCount);
             }
 
-            if (collapseTriggeredByListItemClick && mExpandDragListener != null) {
+            if (collapseTriggeredByListItemClick && mExpandCollapseListener != null) {
                 int expandedCountBeforePosition = getExpandedItemCount(parentIndex);
-                mExpandDragListener.onListItemCollapsed(parentIndex - expandedCountBeforePosition);
+                mExpandCollapseListener.onListItemCollapsed(parentIndex - expandedCountBeforePosition);
             }
         }
     }
@@ -951,70 +957,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     }
 
     /**
-     * Notify any registered observers that the ParentListItem and it's child list items reflected at
-     * {@code fromParentPosition} has been moved to {@code toParentPosition}.
-     * <p>
-     * <p>This is a structural change event. Representations of other existing items in the
-     * data set are still considered up to date and will not be rebound, though their
-     * positions may be altered.</p>
-     *
-     * @param fromParentPosition Previous position of the ParentListItem, relative to list of
-     *                           ParentListItems only.
-     * @param toParentPosition   New position of the ParentListItem, relative to list of
-     *                           ParentListItems only.
-     */
-    public void notifyParentItemMoved(int fromParentPosition, int toParentPosition) {
-
-        int fromWrapperIndex = getParentWrapperIndex(fromParentPosition);
-        ParentWrapper fromParentWrapper = (ParentWrapper) mItemList.get(fromWrapperIndex);
-
-        // If the parent is collapsed we can take advantage of notifyItemMoved otherwise
-        // we are forced to do a "manual" move by removing and then adding the parent + children
-        // (no notifyItemRangeMovedAvailable)
-        boolean isCollapsed = !fromParentWrapper.isExpanded();
-        boolean isExpandedNoChildren = !isCollapsed && (fromParentWrapper.getChildItemList().size() == 0);
-        if (isCollapsed || isExpandedNoChildren) {
-            int toWrapperIndex = getParentWrapperIndex(toParentPosition);
-            ParentWrapper toParentWrapper = (ParentWrapper) mItemList.get(toWrapperIndex);
-            mItemList.remove(fromWrapperIndex);
-            int childOffset = 0;
-            if (toParentWrapper.isExpanded()) {
-                childOffset = toParentWrapper.getChildItemList().size();
-            }
-            mItemList.add(toWrapperIndex + childOffset, fromParentWrapper);
-
-            notifyItemMoved(fromWrapperIndex, toWrapperIndex + childOffset);
-        } else {
-            // Remove the parent and children
-            int sizeChanged = 0;
-            int childListSize = fromParentWrapper.getChildItemList().size();
-            for (int i = 0; i < childListSize + 1; i++) {
-                mItemList.remove(fromWrapperIndex);
-                sizeChanged++;
-            }
-            notifyItemRangeRemoved(fromWrapperIndex, sizeChanged);
-
-
-            // Add the parent and children at new position
-            int toWrapperIndex = getParentWrapperIndex(toParentPosition);
-            int childOffset = 0;
-            if (toWrapperIndex != -1) {
-                ParentWrapper toParentWrapper = (ParentWrapper) mItemList.get(toWrapperIndex);
-                if (toParentWrapper.isExpanded()) {
-                    childOffset = toParentWrapper.getChildItemList().size();
-                }
-            } else {
-                toWrapperIndex = mItemList.size();
-            }
-            mItemList.add(toWrapperIndex + childOffset, fromParentWrapper);
-            List<?> childItemList = fromParentWrapper.getChildItemList();
-            sizeChanged = childItemList.size() + 1;
-            mItemList.addAll(toWrapperIndex + childOffset + 1, childItemList);
-            notifyItemRangeInserted(toWrapperIndex + childOffset, sizeChanged);
-        }
-    }
-
-    /**
      * Notify any registered observers that the ParentListItem reflected at {@code parentPosition}
      * has a child list item that has been newly inserted at {@code childPosition}.
      * The child list item previously at {@code childPosition} is now at
@@ -1181,31 +1123,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         }
     }
 
-    /**
-     * Notify any registered observers that the child list item contained within the ParentListItem
-     * at {@code parentPosition} has moved from {@code fromChildPosition} to {@code toChildPosition}.
-     * <p>
-     * <p>This is a structural change event. Representations of other existing items in the
-     * data set are still considered up to date and will not be rebound, though their
-     * positions may be altered.</p>
-     *
-     * @param parentPosition    Position of the ParentListItem who has a child that has moved
-     * @param fromChildPosition Previous position of the child list item
-     * @param toChildPosition   New position of the child list item
-     */
-    public void notifyChildItemMoved(int parentPosition, int fromChildPosition, int toChildPosition) {
-        ParentListItem parentListItem = mParentItemList.get(parentPosition);
-        int parentWrapperIndex = getParentWrapperIndex(parentPosition);
-        ParentWrapper parentWrapper = (ParentWrapper) mItemList.get(parentWrapperIndex);
-        parentWrapper.setParentListItem(parentListItem);
-        if (parentWrapper.isExpanded()) {
-            Object fromChild = mItemList.remove(parentWrapperIndex + 1 + fromChildPosition);
-            mItemList.add(parentWrapperIndex + 1 + toChildPosition, fromChild);
-            notifyItemMoved(parentWrapperIndex + 1 + fromChildPosition, parentWrapperIndex + 1 + toChildPosition);
-        }
-    }
-
-
     // endregion
 
     /**
@@ -1289,34 +1206,34 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                     return true;
                 }
             case DragEvent.ACTION_DRAG_ENTERED:
-                if (mExpandDragListener != null) {
-                    mExpandDragListener.onListItemSelected(v);
+                if (mDragSelectCallback != null) {
+                    mDragSelectCallback.onListItemSelected(v);
                 }
                 return true;
             case DragEvent.ACTION_DRAG_EXITED:
-                if (mExpandDragListener != null) {
-                    mExpandDragListener.onListItemUnSelected(v);
+                if (mDragSelectCallback != null) {
+                    mDragSelectCallback.onListItemUnSelected(v);
                 }
                 return true;
             case DragEvent.ACTION_DRAG_LOCATION:
                 return true;
             case DragEvent.ACTION_DROP:
-                if (mExpandDragListener != null) {
+                if (mDragSelectCallback != null) {
                     ClipData.Item item = event.getClipData().getItemAt(0);
                     Intent intent = item.getIntent();
                     if (intent != null && intent.hasExtra(FROM_POSITION)) {
                         int fromPosition = intent.getIntExtra(FROM_POSITION, 0);
                         int fromParentPosition = intent.getIntExtra(FROM_PARENT_POSITION, 0);
                         int fromChildPositionOfParent = intent.getIntExtra(FROM_CHILD_POSITION, 0);
-                        mExpandDragListener.onListItemDrop(fromPosition, fromParentPosition, fromChildPositionOfParent,
+                        mDragSelectCallback.onListItemDrop(fromPosition, fromParentPosition, fromChildPositionOfParent,
                                 Integer.valueOf(v
                                         .getTag().toString()));
                     }
-                    mExpandDragListener.onListItemUnSelected(v);
+                    mDragSelectCallback.onListItemUnSelected(v);
 
                     expandAllParents(Integer.valueOf(v
                             .getTag().toString()));
-                    Log.d("position", "toPosition" + "= " + Integer.valueOf(v
+                    Log.d(TAG, "toPosition" + "= " + Integer.valueOf(v
                             .getTag().toString()));
                 }
                 return true;
@@ -1358,9 +1275,9 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         intent.putExtra(FROM_POSITION, fromPosition);
         intent.putExtra(FROM_PARENT_POSITION, fromParentPosition);
         intent.putExtra(FROM_CHILD_POSITION, fromChildPositionOfParent);
-        Log.d("position", FROM_POSITION + "= " + fromPosition);
-        Log.d("position", FROM_PARENT_POSITION + "= " + fromParentPosition);
-        Log.d("position", FROM_CHILD_POSITION + "= " + fromChildPositionOfParent);
+        Log.d(TAG, FROM_POSITION + "= " + fromPosition);
+        Log.d(TAG, FROM_PARENT_POSITION + "= " + fromParentPosition);
+        Log.d(TAG, FROM_CHILD_POSITION + "= " + fromChildPositionOfParent);
 
 
         // 收起所有的View

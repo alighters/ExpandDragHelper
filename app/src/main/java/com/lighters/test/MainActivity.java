@@ -9,10 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.lighters.library.expanddrag.Adapter.ExpandableRecyclerAdapter;
+import com.lighters.library.expanddrag.callback.DragSelectCallback;
+import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
+import com.lighters.library.expanddrag.callback.LoadMoreListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,11 +48,15 @@ public class MainActivity extends AppCompatActivity {
         Recipe taco = new Recipe("taco", num1);
         Recipe quesadilla = new Recipe("quesadilla", num2);
         Recipe burger = new Recipe("burger", num3);
-        final List<Recipe> recipes = Arrays.asList(taco, quesadilla, burger);
+        final List<Recipe> recipes = new ArrayList<>();
+        recipes.add(taco);
+        recipes.add(quesadilla);
+        recipes.add(burger);
+
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new RecipeAdapter(this, recipes);
-        mAdapter.setExpandDragListener(new ExpandableRecyclerAdapter.ExpandDragListener() {
+        mAdapter.setExpandCollapseListener(new ExpandCollapseListener() {
             @Override
             public void onListItemExpanded(int position) {
                 Recipe expandedRecipe = recipes.get(position);
@@ -74,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             }
 
+        });
+        mAdapter.setDragSelectCallback(new DragSelectCallback() {
             @Override
             public void onListItemSelected(View view) {
                 view.setBackgroundColor(Color.RED);
@@ -101,9 +108,19 @@ public class MainActivity extends AppCompatActivity {
                 if (ingredient != null && toParentPosition >= 0 && toParentPosition < recipes.size()) {
                     recipes.get(toParentPosition).getChildItemList().add(0, ingredient);
                 }
-//                mAdapter.notifyDataSetChanged();
             }
+        });
 
+        mAdapter.setLoadMoreListener(new LoadMoreListener() {
+            @Override
+            public void loadMore(int parentIndex) {
+                if (parentIndex >= 0 && parentIndex < recipes.size()) {
+                    Recipe recipe = recipes.get(parentIndex);
+                    for (int i = 0; i < 5; i++)
+                        recipe.getChildItemList().add(parentIndex + "" + i);
+                    mAdapter.notifyChildItemRangeInserted(parentIndex, recipe.getChildItemList().size(), 5);
+                }
+            }
         });
 
         recyclerView.setAdapter(mAdapter);

@@ -27,4 +27,9 @@ public class Recipe implements ParentListItem {
     public boolean isInitiallyExpanded() {
         return false;
     }
+
+    @Override
+    public boolean isLoadMore() {
+        return true;
+    }
 }

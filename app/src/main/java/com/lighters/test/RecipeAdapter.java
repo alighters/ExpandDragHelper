@@ -11,7 +11,7 @@ import com.lighters.library.expanddrag.Model.ParentListItem;
 
 import java.util.List;
 
-public class RecipeAdapter extends ExpandableRecyclerAdapter<RecipeViewHolder, IngredientViewHolder> {
+public class RecipeAdapter extends ExpandableRecyclerAdapter<RecipeViewHolder, IngredientViewHolder, RecipeLoadMoreViewHolder> {
 
     private LayoutInflater mInflator;
 
@@ -42,5 +42,17 @@ public class RecipeAdapter extends ExpandableRecyclerAdapter<RecipeViewHolder, I
     public void onBindChildViewHolder(IngredientViewHolder ingredientViewHolder, int position, Object childListItem) {
         String ingredient = (String) childListItem;
         ingredientViewHolder.bind(ingredient);
+    }
+
+    @Override
+    public RecipeLoadMoreViewHolder onCreateLoadMoreViewHolder(ViewGroup viewGroup) {
+        View view = mInflator.inflate(R.layout.load_more_view, viewGroup, false);
+        return new RecipeLoadMoreViewHolder(view);
+    }
+
+    @Override
+    public void onBindLoadMoreViewHolder(RecipeLoadMoreViewHolder viewHolder, int position, Object object) {
+        String text = object.toString();
+        viewHolder.bind(text);
     }
 }

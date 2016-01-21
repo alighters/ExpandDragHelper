@@ -8,10 +8,12 @@ import java.util.List;
 
 /**
  * Helper for {@link ExpandableRecyclerAdapter}.
- *
+ * <p/>
  * Created by Ryan Brooks on 6/11/15.
  */
 public class ExpandableRecyclerAdapterHelper {
+
+    public static final String PARENT_LOAD_MORE_PREFIX = "parent_load_more_";
 
     /**
      * Generates a full list of all {@link ParentListItem} objects and their
@@ -39,7 +41,12 @@ public class ExpandableRecyclerAdapterHelper {
                 for (int j = 0; j < childListItemCount; j++) {
                     parentWrapperList.add(parentWrapper.getChildItemList().get(j));
                 }
+
+                // 添加LoadMore的数据.
+                if (parentListItem.isLoadMore())
+                    parentWrapperList.add(PARENT_LOAD_MORE_PREFIX + i);
             }
+
         }
 
         return parentWrapperList;
