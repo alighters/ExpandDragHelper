@@ -1316,23 +1316,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     @Override
     public boolean onLongClick(View v) {
 
-        // Create a new ClipData using the tag as a label, the plain text MIME type, and
-        // the already-created item. This will create a new ClipDescription object within the
-        // ClipData, and set its MIME type entry to "text/plain"
-
-
-        collapseAllParents();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < getItemCount(); i++) {
-                    if (mItemList.get(i) instanceof ParentWrapper) {
-                        collapseParentViews(((ParentWrapper) mItemList.get(i)), i);
-                    }
-                }
-            }
-        }, 100);
-
+        // 获取到相应的位置, 并将其保存在对应的intent中.
         int fromPosition = Integer.valueOf(v.getTag().toString());
 
         int fromParentPosition = 0;
@@ -1360,6 +1344,22 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         intent.putExtra(FROM_PARENT_POSITION, fromParentPosition);
         intent.putExtra(FROM_CHILD_POSITION, fromChildPositionOfParent);
 
+
+        // 收起所有的View
+        collapseAllParents();
+        // 延时更新未更新的parentWrapper, 仅仅更新其收起的状态
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < getItemCount(); i++) {
+                    if (mItemList.get(i) instanceof ParentWrapper) {
+                        collapseParentViews(((ParentWrapper) mItemList.get(i)), i);
+                    }
+                }
+            }
+        });
+
+        // 传递相应的数据, 设置开始脱宅所需要的数据, 并开始拖拽.
         ClipData dragData = ClipData.newIntent(FROM_POSITION_DATA, intent);
 
         // Instantiates the drag shadow builder.
