@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,6 +50,9 @@ import java.util.List;
 public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ParentViewHolder
         .ParentListItemExpandCollapseListener, View.OnDragListener, View.OnLongClickListener, View.OnTouchListener {
+
+    private static final String TAG = ExpandableRecyclerAdapter.class.getName() + "_tag";
+    ;
 
     private static final String EXPANDED_STATE_MAP = "ExpandableRecyclerAdapter.ExpandedStateMap";
     private static final int TYPE_PARENT = 0;
@@ -420,12 +424,18 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     public void expandAllParents(int fromParenIndex) {
         if (fromParenIndex >= 0 && fromParenIndex < mParentItemList.size()) {
             expandParent(fromParenIndex);
+            Log.d("position", "expand=" + fromParenIndex);
         }
+        int scrollPosition = 0;
         for (int i = 0; i < mParentItemList.size(); i++) {
             if (i < fromParenIndex) {
                 expandParent(i);
-                scrollToPosition(mParentItemList.get(i).getChildItemList().size() + fromParenIndex);
+                Log.d("position", "expand=" + fromParenIndex);
+                scrollPosition += mParentItemList.get(i).getChildItemList().size() + i;
+                Log.d("position", "scrollTo=" + scrollPosition);
+                scrollToPosition(scrollPosition);
             } else {
+                Log.d("position", "expand=" + fromParenIndex);
                 expandParent(i);
             }
         }
@@ -1303,10 +1313,15 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                                         .getTag().toString()));
                     }
                     mExpandDragListener.onListItemUnSelected(v);
+
+                    expandAllParents(Integer.valueOf(v
+                            .getTag().toString()));
+                    Log.d("position", "toPosition" + "= " + Integer.valueOf(v
+                            .getTag().toString()));
                 }
                 return true;
             case DragEvent.ACTION_DRAG_ENDED:
-                expandAllParents(Integer.valueOf(v
+                Log.d(TAG, "DRAG_ENdED" + Integer.valueOf(v
                         .getTag().toString()));
                 return true;
         }
@@ -1343,6 +1358,9 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         intent.putExtra(FROM_POSITION, fromPosition);
         intent.putExtra(FROM_PARENT_POSITION, fromParentPosition);
         intent.putExtra(FROM_CHILD_POSITION, fromChildPositionOfParent);
+        Log.d("position", FROM_POSITION + "= " + fromPosition);
+        Log.d("position", FROM_PARENT_POSITION + "= " + fromParentPosition);
+        Log.d("position", FROM_CHILD_POSITION + "= " + fromChildPositionOfParent);
 
 
         // 收起所有的View

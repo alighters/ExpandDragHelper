@@ -98,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
                 Recipe recipe = recipes.get(fromParentPosition);
                 String ingredient = recipe.getChildItemList().get(fromChildPositionOfParent);
                 recipe.getChildItemList().remove(ingredient);
-                if (ingredient != null) {
+                if (ingredient != null && toParentPosition >= 0 && toParentPosition < recipes.size()) {
                     recipes.get(toParentPosition).getChildItemList().add(0, ingredient);
                 }
-                mAdapter.notifyDataSetChanged();
+//                mAdapter.notifyDataSetChanged();
             }
 
         });
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!result) {
-                    mAdapter.expandAllParents(2);
+                    mAdapter.expandAllParents(1);
                 } else
                     mAdapter.collapseAllParents();
                 result = !result;
