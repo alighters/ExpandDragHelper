@@ -678,7 +678,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 }
                 if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
                     childListItemCount += 1;
-                    mItemList.add(parentIndex + childListItemCount, ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX + parentIndex);
+                    mItemList.add(parentIndex + childListItemCount, ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX + getParentWrapperIndex(parentIndex));
                 }
 
                 notifyItemRangeInserted(parentIndex + 1, childListItemCount);
