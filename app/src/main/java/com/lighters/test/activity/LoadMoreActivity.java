@@ -1,6 +1,5 @@
 package com.lighters.test.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
-import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.library.expanddrag.callback.LoadMoreListener;
 import com.lighters.test.R;
@@ -84,36 +82,36 @@ public class LoadMoreActivity extends AppCompatActivity {
             }
 
         });
-        mAdapter.setDragSelectCallback(new DragSelectCallback() {
-            @Override
-            public void onListItemSelected(View view) {
-                view.setBackgroundColor(Color.RED);
-                view.invalidate();
-            }
-
-            @Override
-            public void onListItemUnSelected(View view) {
-                view.setBackgroundColor(Color.TRANSPARENT);
-                view.invalidate();
-            }
-
-            @Override
-            public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
-                                       int toParentPosition) {
-                Toast.makeText(LoadMoreActivity.this,
-                        "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
-                                + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
-                                toParentPosition,
-                        Toast.LENGTH_SHORT)
-                        .show();
-                Group group = groups.get(fromParentPosition);
-                String ingredient = group.getChildItemList().get(fromChildPositionOfParent);
-                group.getChildItemList().remove(ingredient);
-                if (ingredient != null && toParentPosition >= 0 && toParentPosition < groups.size()) {
-                    groups.get(toParentPosition).getChildItemList().add(0, ingredient);
-                }
-            }
-        });
+//        mAdapter.setDragSelectCallback(new DragSelectCallback() {
+//            @Override
+//            public void onListItemSelected(View view) {
+//                view.setBackgroundColor(Color.RED);
+//                view.invalidate();
+//            }
+//
+//            @Override
+//            public void onListItemUnSelected(View view) {
+//                view.setBackgroundColor(Color.TRANSPARENT);
+//                view.invalidate();
+//            }
+//
+//            @Override
+//            public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
+//                                       int toParentPosition) {
+//                Toast.makeText(LoadMoreActivity.this,
+//                        "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
+//                                + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
+//                                toParentPosition,
+//                        Toast.LENGTH_SHORT)
+//                        .show();
+//                Group group = groups.get(fromParentPosition);
+//                String ingredient = group.getChildItemList().get(fromChildPositionOfParent);
+//                group.getChildItemList().remove(ingredient);
+//                if (ingredient != null && toParentPosition >= 0 && toParentPosition < groups.size()) {
+//                    groups.get(toParentPosition).getChildItemList().add(0, ingredient);
+//                }
+//            }
+//        });
 
         mAdapter.setLoadMoreListener(new LoadMoreListener() {
             @Override

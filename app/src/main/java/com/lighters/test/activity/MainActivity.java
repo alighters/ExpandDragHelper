@@ -91,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
         });
         mAdapter.setDragSelectCallback(new DragSelectCallback() {
             @Override
-            public void onListItemSelected(View view) {
+            public void onListItemSelected(View view, int parentPostion) {
                 view.setBackgroundColor(Color.RED);
                 view.invalidate();
             }
 
             @Override
-            public void onListItemUnSelected(View view) {
+            public void onListItemUnSelected(View view, int parentPostion) {
                 view.setBackgroundColor(Color.TRANSPARENT);
                 view.invalidate();
             }
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
                                 + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
                                 toParentPosition,
-                        Toast.LENGTH_SHORT)
+                        Toast.LENGTH_LONG)
                         .show();
                 Group group = groups.get(fromParentPosition);
                 String ingredient = group.getChildItemList().get(fromChildPositionOfParent);

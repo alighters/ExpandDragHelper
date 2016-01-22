@@ -10,16 +10,18 @@ public interface DragSelectCallback {
     /**
      * Called when a list item is selected when drag.
      *
-     * @param view The view of the item in the list being selected
+     * @param view           The view of the item in the list being selected
+     * @param parentPosition The position of the parent item.
      */
-    void onListItemSelected(View view);
+    void onListItemSelected(View view, int parentPosition);
 
     /**
      * Called when a list item is unselected when drag.
      *
-     * @param view The view of the item in the list being unselected
+     * @param view           The view of the item in the list being unselected
+     * @param parentPosition The position of the parent item.
      */
-    void onListItemUnSelected(View view);
+    void onListItemUnSelected(View view, int parentPosition);
 
     /**
      * Called when the drag proceudure is stopped
