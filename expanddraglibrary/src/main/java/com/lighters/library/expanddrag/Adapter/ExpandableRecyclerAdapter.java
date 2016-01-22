@@ -1464,6 +1464,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             if (parentPosition > -1 && parentPosition < mParentItemList.size()) {
                 if (mParentItemList.get(parentPosition).getLoadingStatus() != LoadMoreStatus.FINISH) {
                     mParentItemList.get(parentPosition).setLoadMoreStatus(LoadMoreStatus.LOADING);
+                    mItemList.set(position, LoadMoreStatus.LOADING);
+                    notifyItemChanged(position);
                     mLoadMoreListener.loadMore(parentPosition);
                 }
             }

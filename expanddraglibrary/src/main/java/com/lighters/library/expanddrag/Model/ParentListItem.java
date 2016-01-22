@@ -39,11 +39,14 @@ public abstract class ParentListItem {
      * @return
      */
     public LoadMoreStatus getLoadingStatus() {
-        return LoadMoreStatus.INIT;
+        return mLoadMoreStatus;
     }
 
-
-    public void setLoadMoreStatus(LoadMoreStatus loadMoreStatus){
+    /**
+     * Setterr the loading status of the parent item.
+     * @param loadMoreStatus
+     */
+    public void setLoadMoreStatus(LoadMoreStatus loadMoreStatus) {
         mLoadMoreStatus = loadMoreStatus;
     }
 }

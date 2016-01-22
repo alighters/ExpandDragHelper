@@ -122,22 +122,28 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter.setLoadMoreListener(new LoadMoreListener() {
             @Override
-            public void loadMore(int parentIndex) {
-                if (parentIndex >= 0 && parentIndex < groups.size()) {
-                    Group group = groups.get(parentIndex);
-                    int childSize = group.getChildItemList().size();
+            public void loadMore(final int parentIndex) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (parentIndex >= 0 && parentIndex < groups.size()) {
+                            Group group = groups.get(parentIndex);
+                            int childSize = group.getChildItemList().size();
 
-                    List<String> appendList = new ArrayList<String>();
-                    if (childSize > 10)
-                        group.setLoadMoreStatus(LoadMoreStatus.FINISH);
-                    else {
-                        for (int i = 0; i < 5; i++)
-                            appendList.add(parentIndex + "" + (i + 1));
-                        group.getChildItemList().addAll(appendList);
-                        group.setLoadMoreStatus(LoadMoreStatus.INIT);
+                            List<String> appendList = new ArrayList<String>();
+                            if (childSize > 10)
+                                group.setLoadMoreStatus(LoadMoreStatus.FINISH);
+                            else {
+                                for (int i = 0; i < 5; i++)
+                                    appendList.add(parentIndex + "" + (i + 1));
+                                group.getChildItemList().addAll(appendList);
+                                group.setLoadMoreStatus(LoadMoreStatus.INIT);
+                            }
+                            mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, appendList.size());
+                        }
                     }
-                    mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, appendList.size());
-                }
+                }, 2000);
+
             }
         });
 
