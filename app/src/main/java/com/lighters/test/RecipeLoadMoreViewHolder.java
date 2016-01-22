@@ -23,6 +23,6 @@ public class RecipeLoadMoreViewHolder extends LoadMoreViewHolder {
     }
 
     public void bind(String text) {
-        moreView.setText(text);
+        moreView.setText("loadmore_" + text);
     }
 }

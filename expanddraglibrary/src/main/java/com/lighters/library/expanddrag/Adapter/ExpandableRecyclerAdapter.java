@@ -54,7 +54,8 @@ import java.util.List;
 public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, LVH
         extends LoadMoreViewHolder>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ParentViewHolder
-        .ParentListItemExpandCollapseListener, View.OnDragListener, View.OnLongClickListener, View.OnTouchListener {
+        .ParentListItemExpandCollapseListener, View.OnDragListener, View.OnLongClickListener, View.OnTouchListener,
+        View.OnClickListener {
 
     private static final String TAG = ExpandableRecyclerAdapter.class.getName() + "_tag";
 
@@ -153,7 +154,10 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             onBindParentViewHolder(parentViewHolder, position, parentWrapper.getParentListItem());
         } else if (listItem != null && listItem instanceof String && listItem.toString().contains
                 (ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX)) {
-            onBindLoadMoreViewHolder((LVH) holder, position, listItem);
+            LVH loadMoreViewHolder = (LVH) holder;
+            loadMoreViewHolder.itemView.setTag(position);
+            loadMoreViewHolder.itemView.setOnClickListener(this);
+            onBindLoadMoreViewHolder((LVH) holder, position, getParentPosition(position), listItem);
 
         } else if (listItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
@@ -187,9 +191,25 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      */
     public abstract CVH onCreateChildViewHolder(ViewGroup childViewGroup);
 
+    /**
+     * Create the load more view holder
+     *
+     * @param viewGroup
+     * @return
+     */
     public abstract LVH onCreateLoadMoreViewHolder(ViewGroup viewGroup);
 
-    public abstract void onBindLoadMoreViewHolder(LVH viewHolder, int position, Object object);
+    /**
+     * Bind the load more view holder
+     *
+     * @param viewHolder
+     * @param position
+     * @param parentIndex
+     * @param object
+     */
+    public void onBindLoadMoreViewHolder(LVH viewHolder, int position, int parentIndex, Object object) {
+
+    }
 
     /**
      * Callback called from onBindViewHolder(RecyclerView.ViewHolder, int)
@@ -419,11 +439,17 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             Log.d(TAG, "expand=" + fromParenIndex);
         }
         int scrollPosition = 0;
+        ParentListItem parentListItem = null;
         for (int i = 0; i < mParentItemList.size(); i++) {
             if (i < fromParenIndex) {
                 expandParent(i);
                 Log.d(TAG, "expand=" + fromParenIndex);
-                scrollPosition += mParentItemList.get(i).getChildItemList().size() + i;
+                parentListItem = mParentItemList.get(i);
+                int childCount = parentListItem.getChildItemList().size();
+                if (parentListItem.isLoadMore()) {
+                    childCount += 1;
+                }
+                scrollPosition += childCount + i;
                 Log.d(TAG, "scrollTo=" + scrollPosition);
                 scrollToPosition(scrollPosition);
             } else {
@@ -605,6 +631,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
             if (viewHolder != null && !viewHolder.isExpanded()) {
                 viewHolder.setExpanded(true);
+                viewHolder.itemView.setTag(parentIndex);
                 viewHolder.onExpansionToggled(false);
             }
 
@@ -628,6 +655,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
             if (viewHolder != null && viewHolder.isExpanded()) {
                 viewHolder.setExpanded(false);
+                viewHolder.itemView.setTag(parentIndex);
                 viewHolder.onExpansionToggled(true);
             }
 
@@ -650,6 +678,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
             if (viewHolder != null && viewHolder.isExpanded()) {
                 viewHolder.setExpanded(false);
+                viewHolder.itemView.setTag(parentIndex);
                 viewHolder.onExpansionToggled(true);
             }
         }
@@ -678,7 +707,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 }
                 if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
                     childListItemCount += 1;
-                    mItemList.add(parentIndex + childListItemCount, ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX + getParentWrapperIndex(parentIndex));
+                    mItemList.add(parentIndex + childListItemCount, ExpandableRecyclerAdapterHelper
+                            .PARENT_LOAD_MORE_PREFIX + getParentWrapperIndex(parentIndex));
                 }
 
                 notifyItemRangeInserted(parentIndex + 1, childListItemCount);
@@ -1177,6 +1207,26 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     }
 
     /**
+     * Get the parent position of the child.
+     *
+     * @param position
+     * @return
+     */
+    private int getParentPosition(int position) {
+        int parent = -1;
+        ParentWrapper parentWrapper = null;
+        for (int i = 0; i < mItemList.size(); i++) {
+            Object listItem = mItemList.get(i);
+            if (listItem instanceof ParentWrapper) {
+                parent++;
+            }
+            if (i >= position)
+                break;
+        }
+        return parent;
+    }
+
+    /**
      * Gets the ParentWrapper for a specified ParentListItem from the list of
      * parents.
      *
@@ -1225,9 +1275,9 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                         int fromPosition = intent.getIntExtra(FROM_POSITION, 0);
                         int fromParentPosition = intent.getIntExtra(FROM_PARENT_POSITION, 0);
                         int fromChildPositionOfParent = intent.getIntExtra(FROM_CHILD_POSITION, 0);
+                        int toPosition = Integer.valueOf(v.getTag().toString());
                         mDragSelectCallback.onListItemDrop(fromPosition, fromParentPosition, fromChildPositionOfParent,
-                                Integer.valueOf(v
-                                        .getTag().toString()));
+                                toPosition);
                     }
                     mDragSelectCallback.onListItemUnSelected(v);
 
@@ -1283,7 +1333,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         // 收起所有的View
         collapseAllParents();
         // 延时更新未更新的parentWrapper, 仅仅更新其收起的状态
-        new Handler().post(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < getItemCount(); i++) {
@@ -1292,7 +1342,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                     }
                 }
             }
-        });
+        }, 100);
 
         // 传递相应的数据, 设置开始脱宅所需要的数据, 并开始拖拽.
         ClipData dragData = ClipData.newIntent(FROM_POSITION_DATA, intent);
@@ -1384,5 +1434,22 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 break;
         }
         return false;
+    }
+
+    /**
+     * The load more item view click event.
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        if (v.getTag() != null && mLoadMoreListener != null) {
+            int position = Integer.valueOf(v.getTag().toString());
+            int parentPosition = getParentPosition(position);
+            if (parentPosition > -1 && parentPosition < mParentItemList.size()) {
+                mLoadMoreListener.loadMore(parentPosition);
+            }
+
+        }
     }
 }

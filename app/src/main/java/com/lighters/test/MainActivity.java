@@ -116,9 +116,10 @@ public class MainActivity extends AppCompatActivity {
             public void loadMore(int parentIndex) {
                 if (parentIndex >= 0 && parentIndex < recipes.size()) {
                     Recipe recipe = recipes.get(parentIndex);
+                    int childSize = recipe.getChildItemList().size();
                     for (int i = 0; i < 5; i++)
-                        recipe.getChildItemList().add(parentIndex + "" + i);
-                    mAdapter.notifyChildItemRangeInserted(parentIndex, recipe.getChildItemList().size(), 5);
+                        recipe.getChildItemList().add(parentIndex + "" + (i + 1));
+                    mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, 5);
                 }
             }
         });
