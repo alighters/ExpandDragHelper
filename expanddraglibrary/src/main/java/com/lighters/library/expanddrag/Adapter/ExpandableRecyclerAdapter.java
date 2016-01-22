@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.library.expanddrag.Model.ParentWrapper;
 import com.lighters.library.expanddrag.ViewHolder.ChildViewHolder;
@@ -152,11 +153,11 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             ParentWrapper parentWrapper = (ParentWrapper) listItem;
             parentViewHolder.setExpanded(parentWrapper.isExpanded());
             onBindParentViewHolder(parentViewHolder, position, parentWrapper.getParentListItem());
-        } else if (listItem != null && listItem instanceof String && listItem.toString().contains
-                (ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX)) {
+        } else if (listItem != null && listItem instanceof LoadMoreStatus) {
             LVH loadMoreViewHolder = (LVH) holder;
             loadMoreViewHolder.itemView.setTag(position);
             loadMoreViewHolder.itemView.setOnClickListener(this);
+            loadMoreViewHolder.update((LoadMoreStatus) listItem);
             onBindLoadMoreViewHolder((LVH) holder, position, getParentPosition(position), listItem);
 
         } else if (listItem == null) {
@@ -197,7 +198,9 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param viewGroup
      * @return
      */
-    public abstract LVH onCreateLoadMoreViewHolder(ViewGroup viewGroup);
+    public LVH onCreateLoadMoreViewHolder(ViewGroup viewGroup) {
+        return null;
+    }
 
     /**
      * Bind the load more view holder
@@ -260,8 +263,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         Object listItem = getListItem(position);
         if (listItem instanceof ParentWrapper) {
             return TYPE_PARENT;
-        } else if (listItem instanceof String && listItem.toString().contains(ExpandableRecyclerAdapterHelper
-                .PARENT_LOAD_MORE_PREFIX)) {
+        } else if (listItem instanceof LoadMoreStatus) {
             return TYPE_LOAD_MORE;
         } else if (listItem == null) {
             throw new IllegalStateException("Null object added");
@@ -590,7 +592,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                     }
 
                     if (parentListItem.isLoadMore())
-                        parentWrapperList.add(ExpandableRecyclerAdapterHelper.PARENT_LOAD_MORE_PREFIX + i);
+                        parentWrapperList.add(parentListItem.getLoadingStatus());
                 }
             }
 
@@ -707,8 +709,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 }
                 if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
                     childListItemCount += 1;
-                    mItemList.add(parentIndex + childListItemCount, ExpandableRecyclerAdapterHelper
-                            .PARENT_LOAD_MORE_PREFIX + getParentWrapperIndex(parentIndex));
+                    mItemList.add(parentIndex + childListItemCount, parentWrapper.getParentListItem()
+                            .getLoadingStatus());
                 }
 
                 notifyItemRangeInserted(parentIndex + 1, childListItemCount);
@@ -1043,6 +1045,14 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 mItemList.add(parentWrapperIndex + childPositionStart + i + 1, child);
             }
             notifyItemRangeInserted(parentWrapperIndex + childPositionStart + 1, itemCount);
+        }
+
+        if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
+            int p = parentWrapperIndex + childPositionStart + 1 + itemCount;
+            if (p >= 0 && p < mItemList.size() && mItemList.get(p) instanceof LoadMoreStatus) {
+                mItemList.set(p, parentWrapper.getParentListItem().getLoadingStatus());
+                notifyItemChanged(p);
+            }
         }
     }
 
@@ -1447,7 +1457,10 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             int position = Integer.valueOf(v.getTag().toString());
             int parentPosition = getParentPosition(position);
             if (parentPosition > -1 && parentPosition < mParentItemList.size()) {
-                mLoadMoreListener.loadMore(parentPosition);
+                if (mParentItemList.get(parentPosition).getLoadingStatus() != LoadMoreStatus.FINISH) {
+                    mParentItemList.get(parentPosition).setLoadMoreStatus(LoadMoreStatus.LOADING);
+                    mLoadMoreListener.loadMore(parentPosition);
+                }
             }
 
         }

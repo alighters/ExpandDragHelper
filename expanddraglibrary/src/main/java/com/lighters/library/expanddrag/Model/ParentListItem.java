@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Interface for implementing required methods in a parent list item.
  */
-public interface ParentListItem {
+public abstract class ParentListItem {
 
     /**
      * Getter for the list of this parent list item's child list items.
@@ -14,7 +14,7 @@ public interface ParentListItem {
      *
      * @return A {@link List} of the children of this {@link ParentListItem}
      */
-    List<?> getChildItemList();
+    public abstract List<?> getChildItemList();
 
     /**
      * Getter used to determine if this {@link ParentListItem}'s
@@ -22,12 +22,26 @@ public interface ParentListItem {
      *
      * @return true if expanded, false if not
      */
-    boolean isInitiallyExpanded();
+    public abstract boolean isInitiallyExpanded();
 
     /**
      * Getter the parent has more child.
      *
      * @return true if have more child (not show at now), false if not
      */
-    boolean isLoadMore();
+    public abstract boolean isLoadMore();
+
+    /**
+     * Getter the loading status of the parent item.
+     *
+     * @return
+     */
+    public LoadMoreStatus getLoadingStatus() {
+        return LoadMoreStatus.INIT;
+    }
+
+
+    public void setLoadMoreStatus(LoadMoreStatus loadMoreStatus){
+
+    }
 }

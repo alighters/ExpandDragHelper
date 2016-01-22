@@ -3,6 +3,8 @@ package com.lighters.library.expanddrag.ViewHolder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.lighters.library.expanddrag.Model.LoadMoreStatus;
+
 /**
  * ViewHolder for loading more in the child list
  * item.
@@ -14,7 +16,7 @@ import android.view.View;
  * @version 1.0
  * @since 1/21/2016
  */
-public class LoadMoreViewHolder extends RecyclerView.ViewHolder {
+public abstract class LoadMoreViewHolder extends RecyclerView.ViewHolder {
 
     /**
      * Default constructor.
@@ -24,5 +26,7 @@ public class LoadMoreViewHolder extends RecyclerView.ViewHolder {
     public LoadMoreViewHolder(final View itemView) {
         super(itemView);
     }
+
+    public abstract void update(LoadMoreStatus status);
 
 }

@@ -7,5 +7,7 @@ public enum LoadMoreStatus {
 
     INIT,
     LOADING,
-    FINISH
+    FINISH;
+
+
 }

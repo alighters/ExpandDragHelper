@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.library.expanddrag.callback.LoadMoreListener;
@@ -119,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
                     int childSize = recipe.getChildItemList().size();
                     for (int i = 0; i < 5; i++)
                         recipe.getChildItemList().add(parentIndex + "" + (i + 1));
+                    if (childSize > 10)
+                        recipe.setLoadMoreStatus(LoadMoreStatus.FINISH);
+                    else
+                        recipe.setLoadMoreStatus(LoadMoreStatus.INIT);
                     mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, 5);
                 }
             }

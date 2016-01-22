@@ -3,6 +3,7 @@ package com.lighters.test;
 import android.view.View;
 import android.widget.TextView;
 
+import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.ViewHolder.LoadMoreViewHolder;
 
 /**
@@ -11,6 +12,7 @@ import com.lighters.library.expanddrag.ViewHolder.LoadMoreViewHolder;
 public class RecipeLoadMoreViewHolder extends LoadMoreViewHolder {
 
     private TextView moreView;
+    private String data;
 
     /**
      * Default constructor.
@@ -22,7 +24,18 @@ public class RecipeLoadMoreViewHolder extends LoadMoreViewHolder {
         moreView = (TextView) itemView.findViewById(R.id.load_more_textview);
     }
 
+    @Override
+    public void update(LoadMoreStatus status) {
+        if (status.equals(LoadMoreStatus.INIT)) {
+            moreView.setText("加载更多");
+        } else if (status.equals(LoadMoreStatus.LOADING)) {
+            moreView.setText("正在加载...");
+        } else {
+            moreView.setText("加载完成");
+        }
+    }
+
     public void bind(String text) {
-        moreView.setText("loadmore_" + text);
+        data = text;
     }
 }

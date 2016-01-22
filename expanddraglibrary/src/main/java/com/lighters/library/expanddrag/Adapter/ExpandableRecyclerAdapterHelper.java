@@ -1,5 +1,6 @@
 package com.lighters.library.expanddrag.Adapter;
 
+import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.library.expanddrag.Model.ParentWrapper;
 
@@ -13,7 +14,6 @@ import java.util.List;
  */
 public class ExpandableRecyclerAdapterHelper {
 
-    public static final String PARENT_LOAD_MORE_PREFIX = "parent_load_more_";
 
     /**
      * Generates a full list of all {@link ParentListItem} objects and their
@@ -44,7 +44,7 @@ public class ExpandableRecyclerAdapterHelper {
 
                 // 添加LoadMore的数据.
                 if (parentListItem.isLoadMore())
-                    parentWrapperList.add(PARENT_LOAD_MORE_PREFIX + i);
+                    parentWrapperList.add(LoadMoreStatus.INIT);
             }
 
         }
