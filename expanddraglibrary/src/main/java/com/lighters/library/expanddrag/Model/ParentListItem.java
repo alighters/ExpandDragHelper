@@ -7,6 +7,8 @@ import java.util.List;
  */
 public abstract class ParentListItem {
 
+    public LoadMoreStatus mLoadMoreStatus = LoadMoreStatus.INIT;
+
     /**
      * Getter for the list of this parent list item's child list items.
      * <p/>
@@ -42,6 +44,6 @@ public abstract class ParentListItem {
 
 
     public void setLoadMoreStatus(LoadMoreStatus loadMoreStatus){
-
+        mLoadMoreStatus = loadMoreStatus;
     }
 }
