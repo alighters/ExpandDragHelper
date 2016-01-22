@@ -1004,15 +1004,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *                       of the ParentListItem specified by {@code parentPosition} only.
      */
     public void notifyChildItemInserted(int parentPosition, int childPosition) {
-        int parentWrapperIndex = getParentWrapperIndex(parentPosition);
-        ParentWrapper parentWrapper = (ParentWrapper) mItemList.get(parentWrapperIndex);
-
-        if (parentWrapper.isExpanded()) {
-            ParentListItem parentListItem = mParentItemList.get(parentPosition);
-            Object child = parentListItem.getChildItemList().get(childPosition);
-            mItemList.add(parentWrapperIndex + childPosition + 1, child);
-            notifyItemInserted(parentWrapperIndex + childPosition + 1);
-        }
+        notifyChildItemRangeInserted(parentPosition, childPosition, 1);
     }
 
     /**
@@ -1036,6 +1028,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         int parentWrapperIndex = getParentWrapperIndex(parentPosition);
         ParentWrapper parentWrapper = (ParentWrapper) mItemList.get(parentWrapperIndex);
 
+
         if (parentWrapper.isExpanded()) {
             ParentListItem parentListItem = mParentItemList.get(parentPosition);
             List<?> childList = parentListItem.getChildItemList();
@@ -1044,16 +1037,28 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                 child = childList.get(childPositionStart + i);
                 mItemList.add(parentWrapperIndex + childPositionStart + i + 1, child);
             }
-            notifyItemRangeInserted(parentWrapperIndex + childPositionStart + 1, itemCount);
-        }
+            // check this parent item did or not have the
+            int count = itemCount;
+            if (childPositionStart == 0 && parentListItem.isLoadMore()) {
+                int p = parentWrapperIndex + childPositionStart + 1 + itemCount;
+                if (p >= 0 && p < mItemList.size() && mItemList.get(p) instanceof LoadMoreStatus) {
+                    // do nothing
+                } else {
+                    mItemList.add(parentListItem.getLoadingStatus());
+                    count += 1;
+                }
+            }
+            notifyItemRangeInserted(parentWrapperIndex + childPositionStart + 1, count);
 
-        if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
-            int p = parentWrapperIndex + childPositionStart + 1 + itemCount;
-            if (p >= 0 && p < mItemList.size() && mItemList.get(p) instanceof LoadMoreStatus) {
-                mItemList.set(p, parentWrapper.getParentListItem().getLoadingStatus());
-                notifyItemChanged(p);
+            if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
+                int p = parentWrapperIndex + childPositionStart + 1 + itemCount;
+                if (p >= 0 && p < mItemList.size() && mItemList.get(p) instanceof LoadMoreStatus) {
+                    mItemList.set(p, parentWrapper.getParentListItem().getLoadingStatus());
+                    notifyItemChanged(p);
+                }
             }
         }
+
     }
 
     /**

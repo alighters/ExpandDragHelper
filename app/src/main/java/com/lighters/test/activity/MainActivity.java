@@ -1,4 +1,4 @@
-package com.lighters.test;
+package com.lighters.test.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.library.expanddrag.callback.LoadMoreListener;
+import com.lighters.test.R;
+import com.lighters.test.Recipe;
+import com.lighters.test.RecipeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +38,11 @@ public class MainActivity extends AppCompatActivity {
         num1.add("04");
         num1.add("05");
         ArrayList<String> num2 = new ArrayList<>();
-        num2.add("11");
-        num2.add("12");
-        num2.add("13");
-        num2.add("14");
-        num2.add("15");
+//        num2.add("11");
+//        num2.add("12");
+//        num2.add("13");
+//        num2.add("14");
+//        num2.add("15");
         ArrayList<String> num3 = new ArrayList<>();
         num3.add("21");
         num3.add("22");
@@ -118,13 +121,17 @@ public class MainActivity extends AppCompatActivity {
                 if (parentIndex >= 0 && parentIndex < recipes.size()) {
                     Recipe recipe = recipes.get(parentIndex);
                     int childSize = recipe.getChildItemList().size();
-                    for (int i = 0; i < 5; i++)
-                        recipe.getChildItemList().add(parentIndex + "" + (i + 1));
+
+                    List<String> appendList = new ArrayList<String>();
                     if (childSize > 10)
                         recipe.setLoadMoreStatus(LoadMoreStatus.FINISH);
-                    else
+                    else {
+                        for (int i = 0; i < 5; i++)
+                            appendList.add(parentIndex + "" + (i + 1));
+                        recipe.getChildItemList().addAll(appendList);
                         recipe.setLoadMoreStatus(LoadMoreStatus.INIT);
-                    mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, 5);
+                    }
+                    mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, appendList.size());
                 }
             }
         });
