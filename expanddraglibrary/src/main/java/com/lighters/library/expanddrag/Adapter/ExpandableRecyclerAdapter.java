@@ -1039,12 +1039,12 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             }
             // check this parent item did or not have the
             int count = itemCount;
-            if (childPositionStart == 0 && parentListItem.isLoadMore()) {
+            if (parentListItem.isLoadMore()) {
                 int p = parentWrapperIndex + childPositionStart + 1 + itemCount;
                 if (p >= 0 && p < mItemList.size() && mItemList.get(p) instanceof LoadMoreStatus) {
                     // do nothing
                 } else {
-                    mItemList.add(parentListItem.getLoadingStatus());
+                    mItemList.add(p, parentListItem.getLoadingStatus());
                     count += 1;
                 }
             }

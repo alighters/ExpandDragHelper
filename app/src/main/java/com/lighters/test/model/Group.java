@@ -1,17 +1,17 @@
-package com.lighters.test;
+package com.lighters.test.model;
 
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 
 import java.util.ArrayList;
 
-public class Recipe extends ParentListItem {
+public class Group extends ParentListItem {
 
     private String mName;
     private ArrayList<String> mIngredients;
     public LoadMoreStatus mLoadMoreStatus = LoadMoreStatus.INIT;
 
-    public Recipe(String name, ArrayList<String> ingredients) {
+    public Group(String name, ArrayList<String> ingredients) {
         mName = name;
         mIngredients = ingredients;
     }

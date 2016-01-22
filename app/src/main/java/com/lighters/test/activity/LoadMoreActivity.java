@@ -2,7 +2,6 @@ package com.lighters.test.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,20 +14,16 @@ import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.library.expanddrag.callback.LoadMoreListener;
 import com.lighters.test.R;
-import com.lighters.test.model.Group;
 import com.lighters.test.adapter.GroupAdapter;
+import com.lighters.test.model.Group;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class LoadMoreActivity extends AppCompatActivity {
 
     private GroupAdapter mAdapter;
     private boolean result = false;
-
-    ArrayList<String> num1 = new ArrayList<>();
-    ArrayList<String> num2 = new ArrayList<>();
-    ArrayList<String> num3 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,31 +31,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        final ArrayList<String> num1 = new ArrayList<>();
-//        num1.add("01");
-//        num1.add("02");
-//        num1.add("03");
-//        num1.add("04");
-//        num1.add("05");|
-        final ArrayList<String> num2 = new ArrayList<>();
+        ArrayList<String> num1 = new ArrayList<>();
+        num1.add("01");
+        num1.add("02");
+        num1.add("03");
+        num1.add("04");
+        num1.add("05");
+        ArrayList<String> num2 = new ArrayList<>();
 //        num2.add("11");
 //        num2.add("12");
 //        num2.add("13");
 //        num2.add("14");
 //        num2.add("15");
-        final ArrayList<String> num3 = new ArrayList<>();
-//        num3.add("21");
-//        num3.add("22");
-//        num3.add("23");
-//        num3.add("24");
-//        num3.add("25");
-        final Group group1 = new Group("group1", num1);
-        final Group group2 = new Group("group2", num2);
-        final Group group3 = new Group("group3", num3);
+        ArrayList<String> num3 = new ArrayList<>();
+        num3.add("21");
+        num3.add("22");
+        num3.add("23");
+        num3.add("24");
+        num3.add("25");
+        Group taco = new Group("taco", num1);
+        Group quesadilla = new Group("quesadilla", num2);
+        Group burger = new Group("burger", num3);
         final List<Group> groups = new ArrayList<>();
-        groups.add(group1);
-        groups.add(group2);
-        groups.add(group3);
+        groups.add(taco);
+        groups.add(quesadilla);
+        groups.add(burger);
 
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
@@ -71,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 Group expandedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.expanded, expandedGroup.getName());
-                Toast.makeText(MainActivity.this,
+                Toast.makeText(LoadMoreActivity.this,
                         toastMsg,
                         Toast.LENGTH_SHORT)
                         .show();
@@ -82,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 Group collapsedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.collapsed, collapsedGroup.getName());
-                Toast.makeText(MainActivity.this,
+                Toast.makeText(LoadMoreActivity.this,
                         toastMsg,
                         Toast.LENGTH_SHORT)
                         .show();
@@ -105,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
                                        int toParentPosition) {
-                Toast.makeText(MainActivity.this,
+                Toast.makeText(LoadMoreActivity.this,
                         "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
                                 + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
                                 toParentPosition,
@@ -153,18 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 } else
                     mAdapter.collapseAllParents();
                 result = !result;
-            }
-        });
-
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                List<String> appendList = new ArrayList<String>();
-                for (int i = 0; i < 5; i++)
-                    appendList.add("" + (i + 1));
-                group3.getChildItemList().addAll(appendList);
-                group3.setLoadMoreStatus(LoadMoreStatus.INIT);
-                mAdapter.notifyChildItemRangeInserted(2, 0, appendList.size());
             }
         });
     }

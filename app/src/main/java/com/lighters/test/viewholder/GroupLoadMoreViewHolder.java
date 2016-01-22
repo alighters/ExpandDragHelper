@@ -1,15 +1,16 @@
-package com.lighters.test;
+package com.lighters.test.viewholder;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.ViewHolder.LoadMoreViewHolder;
+import com.lighters.test.R;
 
 /**
  * Created by david on 16/1/21.
  */
-public class RecipeLoadMoreViewHolder extends LoadMoreViewHolder {
+public class GroupLoadMoreViewHolder extends LoadMoreViewHolder {
 
     private TextView moreView;
     private String data;
@@ -19,7 +20,7 @@ public class RecipeLoadMoreViewHolder extends LoadMoreViewHolder {
      *
      * @param itemView The {@link View} being hosted in this ViewHolder
      */
-    public RecipeLoadMoreViewHolder(View itemView) {
+    public GroupLoadMoreViewHolder(View itemView) {
         super(itemView);
         moreView = (TextView) itemView.findViewById(R.id.load_more_textview);
     }

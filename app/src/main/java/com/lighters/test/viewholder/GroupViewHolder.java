@@ -1,4 +1,4 @@
-package com.lighters.test;
+package com.lighters.test.viewholder;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lighters.library.expanddrag.ViewHolder.ParentViewHolder;
+import com.lighters.test.R;
+import com.lighters.test.model.Group;
 
-public class RecipeViewHolder extends ParentViewHolder {
+public class GroupViewHolder extends ParentViewHolder {
 
     private static final float INITIAL_POSITION = 0.0f;
     private static final float ROTATED_POSITION = 180f;
@@ -18,15 +20,15 @@ public class RecipeViewHolder extends ParentViewHolder {
     private final ImageView mArrowExpandImageView;
     private TextView mRecipeTextView;
 
-    public RecipeViewHolder(View itemView) {
+    public GroupViewHolder(View itemView) {
         super(itemView);
         mRecipeTextView = (TextView) itemView.findViewById(R.id.recipe_textview);
 
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.arrow_expand_imageview);
     }
 
-    public void bind(Recipe recipe) {
-        mRecipeTextView.setText(recipe.getName());
+    public void bind(Group group) {
+        mRecipeTextView.setText(group.getName());
     }
 
     @SuppressLint("NewApi")

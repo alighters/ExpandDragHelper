@@ -1,15 +1,16 @@
-package com.lighters.test;
+package com.lighters.test.viewholder;
 
 import android.view.View;
 import android.widget.TextView;
 
 import com.lighters.library.expanddrag.ViewHolder.ChildViewHolder;
+import com.lighters.test.R;
 
-public class IngredientViewHolder extends ChildViewHolder {
+public class ItemViewHolder extends ChildViewHolder {
 
     private TextView mIngredientTextView;
 
-    public IngredientViewHolder(View itemView) {
+    public ItemViewHolder(View itemView) {
         super(itemView);
         mIngredientTextView = (TextView) itemView.findViewById(R.id.ingredient_textview);
     }
