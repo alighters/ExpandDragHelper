@@ -31,7 +31,9 @@ public abstract class ParentListItem {
      *
      * @return true if have more child (not show at now), false if not
      */
-    public abstract boolean isLoadMore();
+    public boolean isLoadMore() {
+        return false;
+    }
 
     /**
      * Getter the loading status of the parent item.
@@ -44,6 +46,7 @@ public abstract class ParentListItem {
 
     /**
      * Setterr the loading status of the parent item.
+     *
      * @param loadMoreStatus
      */
     public void setLoadMoreStatus(LoadMoreStatus loadMoreStatus) {

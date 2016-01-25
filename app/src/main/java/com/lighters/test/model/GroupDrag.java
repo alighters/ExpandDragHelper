@@ -4,13 +4,13 @@ import com.lighters.library.expanddrag.Model.ParentListItem;
 
 import java.util.ArrayList;
 
-public class Group extends ParentListItem {
+public class GroupDrag extends ParentListItem {
 
     private String mName;
     private ArrayList<String> mIngredients;
 
 
-    public Group(String name, ArrayList<String> ingredients) {
+    public GroupDrag(String name, ArrayList<String> ingredients) {
         mName = name;
         mIngredients = ingredients;
     }
@@ -31,6 +31,8 @@ public class Group extends ParentListItem {
 
     @Override
     public boolean isLoadMore() {
-        return true;
+        return false;
     }
+
+
 }

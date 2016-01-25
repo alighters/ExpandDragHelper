@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.lighters.library.expanddrag.ViewHolder.ParentViewHolder;
 import com.lighters.test.R;
-import com.lighters.test.model.Group;
+import com.lighters.test.model.GroupDrag;
 
-public class GroupViewHolder extends ParentViewHolder {
+public class GroupDragViewHolder extends ParentViewHolder {
 
     private static final float INITIAL_POSITION = 0.0f;
     private static final float ROTATED_POSITION = 180f;
@@ -19,14 +19,14 @@ public class GroupViewHolder extends ParentViewHolder {
     private final ImageView mArrowExpandImageView;
     private TextView mRecipeTextView;
 
-    public GroupViewHolder(View itemView) {
+    public GroupDragViewHolder(View itemView) {
         super(itemView);
         mRecipeTextView = (TextView) itemView.findViewById(R.id.recipe_textview);
 
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.arrow_expand_imageview);
     }
 
-    public void bind(Group group) {
+    public void bind(GroupDrag group) {
         mRecipeTextView.setText(group.getName());
     }
 

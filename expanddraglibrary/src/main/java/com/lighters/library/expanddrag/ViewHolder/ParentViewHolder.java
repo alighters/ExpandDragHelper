@@ -86,19 +86,6 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
 
     }
 
-    /**
-     * 选中当前View
-     */
-    public void onSelected() {
-
-    }
-
-    /**
-     * 不选中当前View
-     */
-    public void onUnSelected() {
-
-    }
 
     /**
      * Getter for the {@link ParentListItemExpandCollapseListener} implemented in

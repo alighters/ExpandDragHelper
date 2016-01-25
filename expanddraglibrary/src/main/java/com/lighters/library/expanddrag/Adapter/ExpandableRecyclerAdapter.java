@@ -492,7 +492,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param parentIndex The index of the parent to expand
      */
-    private void expandViews(ParentWrapper parentWrapper, int parentIndex) {
+    protected void expandViews(ParentWrapper parentWrapper, int parentIndex) {
         PVH viewHolder;
         for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
@@ -514,7 +514,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param parentIndex The index of the parent to collapse
      */
-    private void collapseViews(ParentWrapper parentWrapper, int parentIndex) {
+    protected void collapseViews(ParentWrapper parentWrapper, int parentIndex) {
         PVH viewHolder;
         for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
@@ -537,7 +537,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param expansionTriggeredByListItemClick true if expansion was triggered
      *                                          by a click event, false otherwise.
      */
-    private void expandParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean expansionTriggeredByListItemClick) {
+    protected void expandParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean expansionTriggeredByListItemClick) {
         if (!parentWrapper.isExpanded()) {
             parentWrapper.setExpanded(true);
 
@@ -568,7 +568,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param collapseTriggeredByListItemClick true if expansion was triggered
      *                                         by a click event, false otherwise.
      */
-    private void collapseParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean collapseTriggeredByListItemClick) {
+    protected void collapseParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean collapseTriggeredByListItemClick) {
         if (parentWrapper.isExpanded()) {
             parentWrapper.setExpanded(false);
 

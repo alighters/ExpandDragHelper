@@ -312,7 +312,8 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param parentIndex The index of the parent to expand
      */
-    private void expandViews(ParentWrapper parentWrapper, int parentIndex) {
+    @Override
+    public void expandViews(ParentWrapper parentWrapper, int parentIndex) {
         PVH viewHolder;
         for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
@@ -336,7 +337,8 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param parentIndex The index of the parent to collapse
      */
-    private void collapseViews(ParentWrapper parentWrapper, int parentIndex) {
+    @Override
+    public void collapseViews(ParentWrapper parentWrapper, int parentIndex) {
         PVH viewHolder;
         for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
@@ -359,7 +361,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param parentIndex The index of the parent to collapse
      */
-    private void collapseParentViews(ParentWrapper parentWrapper, int parentIndex) {
+    protected void collapseParentViews(ParentWrapper parentWrapper, int parentIndex) {
         PVH viewHolder;
         for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
             viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
@@ -382,6 +384,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      *                                          by a click event, false otherwise.
      */
 
+    @Override
     public void expandParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean
             expansionTriggeredByListItemClick) {
         if (!parentWrapper.isExpanded()) {
@@ -419,7 +422,8 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param collapseTriggeredByListItemClick true if expansion was triggered
      *                                         by a click event, false otherwise.
      */
-    private void collapseParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean
+    @Override
+    public void collapseParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean
             collapseTriggeredByListItemClick) {
         if (parentWrapper.isExpanded()) {
             parentWrapper.setExpanded(false);
@@ -467,6 +471,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param childPosition  Position of the child object that has been inserted, relative to children
      *                       of the ParentListItem specified by {@code parentPosition} only.
      */
+    @Override
     public void notifyChildItemInserted(int parentPosition, int childPosition) {
         notifyChildItemRangeInserted(parentPosition, childPosition, 1);
     }
@@ -488,6 +493,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      *                           {@code parentPosition} only.
      * @param itemCount          number of children inserted
      */
+    @Override
     public void notifyChildItemRangeInserted(int parentPosition, int childPositionStart, int itemCount) {
         int parentWrapperIndex = getParentWrapperIndex(parentPosition);
         ParentWrapper parentWrapper = (ParentWrapper) mItemList.get(parentWrapperIndex);
@@ -540,6 +546,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param childPositionStart Position of the first child object that has changed
      * @param itemCount          number of child objects changed
      */
+    @Override
     public void notifyChildItemRangeChanged(int parentPosition, int childPositionStart, int itemCount) {
         ParentListItem parentListItem = mParentItemList.get(parentPosition);
         int parentWrapperIndex = getParentWrapperIndex(parentPosition);
@@ -577,27 +584,6 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
         return parent;
     }
 
-    /**
-     * Gets the ParentWrapper for a specified ParentListItem from the list of
-     * parents.
-     *
-     * @param parentListItem A ParentListItem in the list of parents
-     * @return If the parent exists on the list, returns its ParentWrapper.
-     * Otherwise, returns null.
-     */
-    private ParentWrapper getParentWrapper(ParentListItem parentListItem) {
-        int listItemCount = mItemList.size();
-        for (int i = 0; i < listItemCount; i++) {
-            Object listItem = mItemList.get(i);
-            if (listItem instanceof ParentWrapper) {
-                if (((ParentWrapper) listItem).getParentListItem().equals(parentListItem)) {
-                    return (ParentWrapper) listItem;
-                }
-            }
-        }
-
-        return null;
-    }
 
     @Override
     public boolean onDrag(View v, DragEvent event) {

@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import com.lighters.library.expanddrag.Adapter.ExpandDragRecyclerAdapter;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.test.R;
-import com.lighters.test.model.Group;
+import com.lighters.test.model.GroupDrag;
+import com.lighters.test.viewholder.GroupDragViewHolder;
 import com.lighters.test.viewholder.GroupLoadMoreViewHolder;
-import com.lighters.test.viewholder.GroupViewHolder;
 import com.lighters.test.viewholder.ItemViewHolder;
 
 import java.util.List;
 
-public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupViewHolder, ItemViewHolder,
+public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupDragViewHolder, ItemViewHolder,
         GroupLoadMoreViewHolder> {
 
     private LayoutInflater mInflator;
@@ -27,9 +27,9 @@ public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupViewHolder,
     }
 
     @Override
-    public GroupViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
+    public GroupDragViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
         View recipeView = mInflator.inflate(R.layout.group_view, parentViewGroup, false);
-        return new GroupViewHolder(recipeView);
+        return new GroupDragViewHolder(recipeView);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupViewHolder,
     }
 
     @Override
-    public void onBindParentViewHolder(GroupViewHolder groupViewHolder, int position, ParentListItem parentListItem) {
-        Group group = (Group) parentListItem;
+    public void onBindParentViewHolder(GroupDragViewHolder groupViewHolder, int position, ParentListItem parentListItem) {
+        GroupDrag group = (GroupDrag) parentListItem;
         groupViewHolder.bind(group);
     }
 
