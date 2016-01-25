@@ -10,14 +10,12 @@ import com.lighters.library.expanddrag.Adapter.ExpandableRecyclerAdapter;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.test.R;
 import com.lighters.test.model.Group;
-import com.lighters.test.viewholder.ItemViewHolder;
-import com.lighters.test.viewholder.GroupLoadMoreViewHolder;
 import com.lighters.test.viewholder.GroupViewHolder;
+import com.lighters.test.viewholder.ItemViewHolder;
 
 import java.util.List;
 
-public class GroupAdapter extends ExpandableRecyclerAdapter<GroupViewHolder, ItemViewHolder,
-        GroupLoadMoreViewHolder> {
+public class GroupAdapter extends ExpandableRecyclerAdapter<GroupViewHolder, ItemViewHolder> {
 
     private LayoutInflater mInflator;
 
@@ -28,13 +26,13 @@ public class GroupAdapter extends ExpandableRecyclerAdapter<GroupViewHolder, Ite
 
     @Override
     public GroupViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
-        View recipeView = mInflator.inflate(R.layout.recipe_view, parentViewGroup, false);
+        View recipeView = mInflator.inflate(R.layout.group_view, parentViewGroup, false);
         return new GroupViewHolder(recipeView);
     }
 
     @Override
     public ItemViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
-        View ingredientView = mInflator.inflate(R.layout.ingredient_view, childViewGroup, false);
+        View ingredientView = mInflator.inflate(R.layout.child_view, childViewGroup, false);
         return new ItemViewHolder(ingredientView);
     }
 
@@ -48,17 +46,5 @@ public class GroupAdapter extends ExpandableRecyclerAdapter<GroupViewHolder, Ite
     public void onBindChildViewHolder(ItemViewHolder itemViewHolder, int position, Object childListItem) {
         String ingredient = (String) childListItem;
         itemViewHolder.bind(ingredient);
-    }
-
-    @Override
-    public GroupLoadMoreViewHolder onCreateLoadMoreViewHolder(ViewGroup viewGroup) {
-        View view = mInflator.inflate(R.layout.load_more_view, viewGroup, false);
-        return new GroupLoadMoreViewHolder(view);
-    }
-
-    @Override
-    public void onBindLoadMoreViewHolder(GroupLoadMoreViewHolder viewHolder, int position, int parentPosition,
-                                         Object object) {
-        viewHolder.bind(parentPosition + "");
     }
 }

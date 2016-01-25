@@ -1,6 +1,8 @@
 package com.lighters.test.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,24 +11,25 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
+import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.library.expanddrag.callback.LoadMoreListener;
 import com.lighters.test.R;
-import com.lighters.test.adapter.GroupAdapter;
+import com.lighters.test.adapter.GroupLoadMoreAdapter;
 import com.lighters.test.model.Group;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadMoreActivity extends AppCompatActivity {
+public class GroupLoadMoreActivity extends AppCompatActivity {
 
-    private GroupAdapter mAdapter;
+    private GroupLoadMoreAdapter mAdapter;
     private boolean result = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_group_loadmore);
 
 
         ArrayList<String> num1 = new ArrayList<>();
@@ -57,14 +60,14 @@ public class LoadMoreActivity extends AppCompatActivity {
 
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        mAdapter = new GroupAdapter(this, groups);
+        mAdapter = new GroupLoadMoreAdapter(this, groups);
         mAdapter.setExpandCollapseListener(new ExpandCollapseListener() {
             @Override
             public void onListItemExpanded(int position) {
                 Group expandedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.expanded, expandedGroup.getName());
-                Toast.makeText(LoadMoreActivity.this,
+                Toast.makeText(GroupLoadMoreActivity.this,
                         toastMsg,
                         Toast.LENGTH_SHORT)
                         .show();
@@ -75,62 +78,69 @@ public class LoadMoreActivity extends AppCompatActivity {
                 Group collapsedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.collapsed, collapsedGroup.getName());
-                Toast.makeText(LoadMoreActivity.this,
+                Toast.makeText(GroupLoadMoreActivity.this,
                         toastMsg,
                         Toast.LENGTH_SHORT)
                         .show();
             }
 
         });
-//        mAdapter.setDragSelectCallback(new DragSelectCallback() {
-//            @Override
-//            public void onListItemSelected(View view) {
-//                view.setBackgroundColor(Color.RED);
-//                view.invalidate();
-//            }
-//
-//            @Override
-//            public void onListItemUnSelected(View view) {
-//                view.setBackgroundColor(Color.TRANSPARENT);
-//                view.invalidate();
-//            }
-//
-//            @Override
-//            public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
-//                                       int toParentPosition) {
-//                Toast.makeText(LoadMoreActivity.this,
-//                        "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
-//                                + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
-//                                toParentPosition,
-//                        Toast.LENGTH_SHORT)
-//                        .show();
-//                Group group = groups.get(fromParentPosition);
-//                String ingredient = group.getChildItemList().get(fromChildPositionOfParent);
-//                group.getChildItemList().remove(ingredient);
-//                if (ingredient != null && toParentPosition >= 0 && toParentPosition < groups.size()) {
-//                    groups.get(toParentPosition).getChildItemList().add(0, ingredient);
-//                }
-//            }
-//        });
+
+        mAdapter.setDragSelectCallback(new DragSelectCallback() {
+            @Override
+            public void onListItemSelected(View view, int parentPostion) {
+                view.setBackgroundColor(Color.RED);
+                view.invalidate();
+            }
+
+            @Override
+            public void onListItemUnSelected(View view, int parentPostion) {
+                view.setBackgroundColor(Color.TRANSPARENT);
+                view.invalidate();
+            }
+
+            @Override
+            public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
+                                       int toParentPosition) {
+                Toast.makeText(GroupLoadMoreActivity.this,
+                        "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
+                                + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
+                                toParentPosition,
+                        Toast.LENGTH_LONG)
+                        .show();
+                Group group = groups.get(fromParentPosition);
+                String ingredient = group.getChildItemList().get(fromChildPositionOfParent);
+                group.getChildItemList().remove(ingredient);
+                if (ingredient != null && toParentPosition >= 0 && toParentPosition < groups.size()) {
+                    groups.get(toParentPosition).getChildItemList().add(0, ingredient);
+                }
+            }
+        });
 
         mAdapter.setLoadMoreListener(new LoadMoreListener() {
             @Override
-            public void loadMore(int parentIndex) {
-                if (parentIndex >= 0 && parentIndex < groups.size()) {
-                    Group group = groups.get(parentIndex);
-                    int childSize = group.getChildItemList().size();
+            public void loadMore(final int parentIndex) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (parentIndex >= 0 && parentIndex < groups.size()) {
+                            Group group = groups.get(parentIndex);
+                            int childSize = group.getChildItemList().size();
 
-                    List<String> appendList = new ArrayList<String>();
-                    if (childSize > 10)
-                        group.setLoadMoreStatus(LoadMoreStatus.FINISH);
-                    else {
-                        for (int i = 0; i < 5; i++)
-                            appendList.add(parentIndex + "" + (i + 1));
-                        group.getChildItemList().addAll(appendList);
-                        group.setLoadMoreStatus(LoadMoreStatus.INIT);
+                            List<String> appendList = new ArrayList<String>();
+                            if (childSize > 10)
+                                group.setLoadMoreStatus(LoadMoreStatus.FINISH);
+                            else {
+                                for (int i = 0; i < 5; i++)
+                                    appendList.add(parentIndex + "" + (i + 1));
+                                group.getChildItemList().addAll(appendList);
+                                group.setLoadMoreStatus(LoadMoreStatus.INIT);
+                            }
+                            mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, appendList.size());
+                        }
                     }
-                    mAdapter.notifyChildItemRangeInserted(parentIndex, childSize, appendList.size());
-                }
+                }, 2000);
+
             }
         });
 

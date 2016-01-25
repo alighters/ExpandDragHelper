@@ -1,59 +1,11 @@
 <resources>
     <string name="app_name">ExpandTestDemo</string>
 
-    <!-- Main screen -->
-    <string name="activity_main_vertical_linear_sample_button">Vertical Linear Sample</string>
-    <string name="activity_main_horizontal_linear_sample_button">Horizontal Linear Sample</string>
-    <string name="activity_main_grid_sample_button">Grid Layout Sample</string>
-    <string name="activity_main_header">Expanding RecyclerView</string>
-    <string name="coming_soon">Feature coming soon</string>
-
-    <!-- Linear sample -->
-    <string name="activity_vertical_linear_sample_title">Vertical Linear Sample</string>
-    <string name="activity_horizontal_linear_sample_title">Horizontal Linear Sample</string>
-    <string name="toolbar_sample_checkBox">Custom Expand Button</string>
-    <string name="child_text">Child %1$d</string>
-    <string name="second_child_text">Child %1$d_2</string>
-    <string name="third_child_text">Child %1$d_3</string>
-    <string name="child_insert_text">Child of inserted #%1$d</string>
-    <string name="parent_text">Parent %1$d</string>
-    <string name="inserted_parent_text">Inserted Parent</string>
-    <string name="arrow_contentDescription">Expand list item arrow</string>
-    <string name="item_expanded">Item %1$d expanded</string>
-    <string name="item_collapsed">Item %1$d collapsed</string>
-    <string name="expand_parent_two">Expand parent 2</string>
-    <string name="collapse_parent_two">Collapse parent 2</string>
-    <string name="expand_all">Expand all parents</string>
-    <string name="collapse_all">Collapse all parents</string>
-    <string name="add_item_to_end">Add parent to end</string>
-    <string name="remove_item_from_end">Remove parent from end</string>
-    <string name="add_item_at_pos_two">Add parent @ pos 1</string>
-    <string name="remove_second_pos">Remove parent @ pos 1</string>
-    <string name="add_child">Add child to end of 2nd parent</string>
-    <string name="remove_child">Remove child on 2nd parent from pos 1</string>
-    <string name="added_child">Child Addition %1$d</string>
-    <string name="add_multiple_parents">Add 2 Parents @ pos 1</string>
-    <string name="modify_last_parent">Modify last Parent</string>
-    <string name="modify_last_child">Modify last Child</string>
-    <string name="modified_parent_text">modified %1$d</string>
-    <string name="modified_child_text">modified Child %1$d</string>
-    <string name="expand_range">Expand parents 4–6</string>
-    <string name="collapse_range">Collapse parents 2–5</string>
-    <string name="add_two_children">Add two children to last parent</string>
-    <string name="remove_two_children">Remove two children from last parent</string>
-    <string name="modify_two_children">Modify two children from last parent</string>
-    <string name="remove_two_parents">Remove last two Parents</string>
-    <string name="modify_two_parents">Modify last two Parents</string>
-    <string name="parent_move">Move parent @ pos 1 to pos 3</string>
-    <string name="child_move">On Parent @ pos 1, move child from pos 0 to end</string>
-
-
     <string name="collapsed">collapsed: %s</string>
     <string name="expanded">expanded: %s</string>
 
+    <string name="expand_group">expand_group</string>
+    <string name="expand_drag_group">expand_drag_group</string>
+    <string name="expand_drag_load_more_group">expand_drag_load_more_group</string>
 
-    <!-- Sample Toolbar -->
-    <string name="no_animation">No animation</string>
-    <string name="spinner_adapter_time_s">1 s</string>
-    <string name="spinner_adapter_time_ms">%1$d ms</string>
 </resources>

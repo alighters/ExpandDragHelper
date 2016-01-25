@@ -16,12 +16,12 @@ import com.lighters.test.viewholder.ItemViewHolder;
 
 import java.util.List;
 
-public class GroupLoadMoreAdapter extends ExpandDragRecyclerAdapter<GroupViewHolder, ItemViewHolder,
+public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupViewHolder, ItemViewHolder,
         GroupLoadMoreViewHolder> {
 
     private LayoutInflater mInflator;
 
-    public GroupLoadMoreAdapter(Context context, @NonNull List<? extends ParentListItem> parentItemList) {
+    public GroupDragAdapter(Context context, @NonNull List<? extends ParentListItem> parentItemList) {
         super(parentItemList);
         mInflator = LayoutInflater.from(context);
     }
@@ -52,13 +52,11 @@ public class GroupLoadMoreAdapter extends ExpandDragRecyclerAdapter<GroupViewHol
 
     @Override
     public GroupLoadMoreViewHolder onCreateLoadMoreViewHolder(ViewGroup viewGroup) {
-        View view = mInflator.inflate(R.layout.load_more_view, viewGroup, false);
-        return new GroupLoadMoreViewHolder(view);
+        return null;
     }
 
     @Override
-    public void onBindLoadMoreViewHolder(GroupLoadMoreViewHolder viewHolder, int position, int parentPosition,
-                                         Object object) {
-        viewHolder.bind(parentPosition + "");
+    public void onBindLoadMoreViewHolder(GroupLoadMoreViewHolder viewHolder, int position, int parentIndex, Object object) {
+
     }
 }
