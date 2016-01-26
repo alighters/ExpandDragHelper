@@ -48,4 +48,11 @@ public abstract class DragSelectCallback {
     public void onStartDrag(int fromPosition, int fromParentPosition, int offsetOfParent) {
     }
 
+    /**
+     * Called when the drag event is ended.
+     */
+    public void onEndDrag() {
+
+    }
+
 }

@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * RecyclerView.Adapter implementation that
  * adds the ability to expand and collapse list items.
- * <p/>
+ * <p>
  * Changes should be notified through:
  * {@link #notifyParentItemInserted(int)}
  * {@link #notifyParentItemRemoved(int)}
@@ -71,7 +71,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     /**
      * Primary constructor. Sets up {@link #mParentItemList} and {@link #mItemList}.
-     * <p/>
+     * <p>
      * Changes to {@link #mParentItemList} should be made through add/remove methods in
      * {@link ExpandableRecyclerAdapter}
      *
@@ -242,11 +242,11 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Fetches the expandable state map from the saved instance state {@link Bundle}
      * and restores the expanded states of all of the list items.
-     * <p/>
+     * <p>
      * Should be called from {@link Activity#onRestoreInstanceState(Bundle)} in
      * the {@link Activity} that hosts the RecyclerView that this
      * {@link ExpandDragRecyclerAdapter} is attached to.
-     * <p/>
+     * <p>
      * Assumes that the list of parent list items is the same as when the saved
      * instance state was stored.
      *
@@ -301,7 +301,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Calls through to the ParentViewHolder to expand views for each
      * RecyclerView the specified parent is a child of.
-     * <p/>
+     * <p>
      * These calls to the ParentViewHolder are made so that animations can be
      * triggered at the ViewHolder level.
      *
@@ -326,7 +326,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Calls through to the ParentViewHolder to collapse views for each
      * RecyclerView a specified parent is a child of.
-     * <p/>
+     * <p>
      * These calls to the ParentViewHolder are made so that animations can be
      * triggered at the ViewHolder level.
      *
@@ -350,7 +350,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Calls through to the ParentViewHolder to collapse views for each
      * RecyclerView a specified parent is a child of.
-     * <p/>
+     * <p>
      * These calls to the ParentViewHolder are made so that animations can be
      * triggered at the ViewHolder level.
      *
@@ -454,7 +454,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * has a child list item that has been newly inserted at {@code childPosition}.
      * The child list item previously at {@code childPosition} is now at
      * position {@code childPosition + 1}.
-     * <p/>
+     * <p>
      * This is a structural change event. Representations of other existing items in the
      * data set are still considered up to date and will not be rebound, though their
      * positions may be altered.
@@ -474,7 +474,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * has {@code itemCount} child list items that have been newly inserted at {@code childPositionStart}.
      * The child list item previously at {@code childPositionStart} and beyond are now at
      * position {@code childPositionStart + itemCount}.
-     * <p/>
+     * <p>
      * This is a structural change event. Representations of other existing items in the
      * data set are still considered up to date and will not be rebound, though their
      * positions may be altered.
@@ -527,7 +527,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Notify any registered observers that the ParentListItem at {@code parentPosition} has
      * {@code itemCount} child Objects starting at {@code childPositionStart} that have changed.
-     * <p/>
+     * <p>
      * This is an item change event, not a structural change event. It indicates that any
      * The ParentListItem at {@code childPositionStart} retains the same identity.
      * reflection of the set of {@code itemCount} child objects starting at {@code childPositionStart}
@@ -617,6 +617,9 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
             case DragEvent.ACTION_DRAG_ENDED:
                 Log.d(TAG, "DRAG_ENdED" + Integer.valueOf(v
                         .getTag().toString()));
+                if (mDragSelectCallback != null) {
+                    mDragSelectCallback.onEndDrag();
+                }
                 return true;
         }
         return false;
