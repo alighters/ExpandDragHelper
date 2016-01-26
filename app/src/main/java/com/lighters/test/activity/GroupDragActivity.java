@@ -112,6 +112,16 @@ public class GroupDragActivity extends AppCompatActivity {
                     GroupDrags.get(toParentPosition).getChildItemList().add(0, ingredient);
                 }
             }
+
+            @Override
+            public void onStartDrag(int fromPosition, int fromParentPosition, int offsetOfParent) {
+                super.onStartDrag(fromPosition, fromParentPosition, offsetOfParent);
+                Toast.makeText(GroupDragActivity.this
+                        , "DragStart: fromParentPosition = " + fromParentPosition,
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+
         });
 
         recyclerView.setAdapter(mAdapter);
