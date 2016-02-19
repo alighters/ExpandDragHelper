@@ -8,13 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
-
 import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.test.R;
 import com.lighters.test.adapter.GroupDragAdapter;
 import com.lighters.test.model.GroupDrag;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,6 @@ public class GroupDragActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-
 
         ArrayList<String> num1 = new ArrayList<>();
         num1.add("01");
@@ -55,7 +52,6 @@ public class GroupDragActivity extends AppCompatActivity {
         GroupDrags.add(quesadilla);
         GroupDrags.add(burger);
 
-
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new GroupDragAdapter(this, GroupDrags);
         mAdapter.setExpandCollapseListener(new ExpandCollapseListener() {
@@ -64,10 +60,7 @@ public class GroupDragActivity extends AppCompatActivity {
                 GroupDrag expandedGroupDrag = GroupDrags.get(position);
 
                 String toastMsg = getResources().getString(R.string.expanded, expandedGroupDrag.getName());
-                Toast.makeText(GroupDragActivity.this,
-                        toastMsg,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(GroupDragActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -75,12 +68,8 @@ public class GroupDragActivity extends AppCompatActivity {
                 GroupDrag collapsedGroupDrag = GroupDrags.get(position);
 
                 String toastMsg = getResources().getString(R.string.collapsed, collapsedGroupDrag.getName());
-                Toast.makeText(GroupDragActivity.this,
-                        toastMsg,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(GroupDragActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
             }
-
         });
 
         mAdapter.setDragSelectCallback(new DragSelectCallback() {
@@ -98,13 +87,16 @@ public class GroupDragActivity extends AppCompatActivity {
 
             @Override
             public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
-                                       int toParentPosition) {
-                Toast.makeText(GroupDragActivity.this,
-                        "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
-                                + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
-                                toParentPosition,
-                        Toast.LENGTH_LONG)
-                        .show();
+                int toParentPosition) {
+                Toast.makeText(GroupDragActivity.this, "fromTotal="
+                    + fromTotalPosition
+                    + ", fromParentPosition = "
+                    + fromParentPosition
+                    + ", fromChildOfParent= "
+                    + fromChildPositionOfParent
+                    + ",topostion = "
+                    +
+                    toParentPosition, Toast.LENGTH_LONG).show();
                 GroupDrag GroupDrag = GroupDrags.get(fromParentPosition);
                 String ingredient = GroupDrag.getChildItemList().get(fromChildPositionOfParent);
                 GroupDrag.getChildItemList().remove(ingredient);
@@ -116,18 +108,14 @@ public class GroupDragActivity extends AppCompatActivity {
             @Override
             public void onStartDrag(int fromPosition, int fromParentPosition, int offsetOfParent) {
                 super.onStartDrag(fromPosition, fromParentPosition, offsetOfParent);
-                Toast.makeText(GroupDragActivity.this
-                        , "DragStart: fromParentPosition = " + fromParentPosition,
-                        Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(GroupDragActivity.this, "DragStart: fromParentPosition = " + fromParentPosition,
+                    Toast.LENGTH_LONG).show();
             }
-
         });
 
         recyclerView.setAdapter(mAdapter);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-
     }
 
     @Override
@@ -141,5 +129,4 @@ public class GroupDragActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         mAdapter.onRestoreInstanceState(savedInstanceState);
     }
-
 }

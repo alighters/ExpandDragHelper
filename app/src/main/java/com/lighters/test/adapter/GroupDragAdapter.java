@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.lighters.library.expanddrag.Adapter.ExpandDragRecyclerAdapter;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.test.R;
@@ -13,11 +12,10 @@ import com.lighters.test.model.GroupDrag;
 import com.lighters.test.viewholder.GroupDragViewHolder;
 import com.lighters.test.viewholder.GroupLoadMoreViewHolder;
 import com.lighters.test.viewholder.ItemViewHolder;
-
 import java.util.List;
 
-public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupDragViewHolder, ItemViewHolder,
-        GroupLoadMoreViewHolder> {
+public class GroupDragAdapter
+    extends ExpandDragRecyclerAdapter<GroupDragViewHolder, ItemViewHolder, GroupLoadMoreViewHolder> {
 
     private LayoutInflater mInflator;
 
@@ -39,7 +37,8 @@ public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupDragViewHol
     }
 
     @Override
-    public void onBindParentViewHolder(GroupDragViewHolder groupViewHolder, int position, ParentListItem parentListItem) {
+    public void onBindParentViewHolder(GroupDragViewHolder groupViewHolder, int position,
+        ParentListItem parentListItem) {
         GroupDrag group = (GroupDrag) parentListItem;
         groupViewHolder.bind(group);
     }
@@ -56,7 +55,8 @@ public class GroupDragAdapter extends ExpandDragRecyclerAdapter<GroupDragViewHol
     }
 
     @Override
-    public void onBindLoadMoreViewHolder(GroupLoadMoreViewHolder viewHolder, int position, int parentIndex, Object object) {
+    public void onBindLoadMoreViewHolder(GroupLoadMoreViewHolder viewHolder, int position, int parentIndex,
+        Object object) {
 
     }
 }

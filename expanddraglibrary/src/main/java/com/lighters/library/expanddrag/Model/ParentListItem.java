@@ -37,8 +37,6 @@ public abstract class ParentListItem {
 
     /**
      * Getter the loading status of the parent item.
-     *
-     * @return
      */
     public LoadMoreStatus getLoadingStatus() {
         return mLoadMoreStatus;
@@ -46,8 +44,6 @@ public abstract class ParentListItem {
 
     /**
      * Setterr the loading status of the parent item.
-     *
-     * @param loadMoreStatus
      */
     public void setLoadMoreStatus(LoadMoreStatus loadMoreStatus) {
         mLoadMoreStatus = loadMoreStatus;

@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">ExpandTestDemo</string>
+  <string name="app_name">ExpandTestDemo</string>
 
-    <string name="collapsed">collapsed: %s</string>
-    <string name="expanded">expanded: %s</string>
+  <string name="collapsed">collapsed: %s</string>
+  <string name="expanded">expanded: %s</string>
 
-    <string name="expand_group">expand_group</string>
-    <string name="expand_drag_group">expand_drag_group</string>
-    <string name="expand_drag_load_more_group">expand_drag_load_more_group</string>
+  <string name="expand_group">expand_group</string>
+  <string name="expand_drag_group">expand_drag_group</string>
+  <string name="expand_drag_load_more_group">expand_drag_load_more_group</string>
 
 </resources>

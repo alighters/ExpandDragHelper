@@ -28,5 +28,4 @@ public abstract class LoadMoreViewHolder extends RecyclerView.ViewHolder {
     }
 
     public abstract void update(LoadMoreStatus status);
-
 }

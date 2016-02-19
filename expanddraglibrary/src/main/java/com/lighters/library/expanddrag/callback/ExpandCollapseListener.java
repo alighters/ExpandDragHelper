@@ -21,5 +21,4 @@ public interface ExpandCollapseListener {
      * @param position The index of the item in the list being collapsed
      */
     void onListItemCollapsed(int position);
-
 }

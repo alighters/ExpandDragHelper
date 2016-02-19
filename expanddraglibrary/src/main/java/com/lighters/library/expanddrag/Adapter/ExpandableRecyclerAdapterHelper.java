@@ -14,13 +14,12 @@ import java.util.List;
  */
 public class ExpandableRecyclerAdapterHelper {
 
-
     /**
      * Generates a full list of all {@link ParentListItem} objects and their
      * children, in order.
      *
      * @param parentItemList A list of the {@code ParentListItem} objects from
-     *                       the {@link ExpandableRecyclerAdapter}
+     * the {@link ExpandableRecyclerAdapter}
      * @return A list of all {@code ParentListItem} objects and their children, expanded
      */
     public static List<Object> generateParentChildItemList(List<? extends ParentListItem> parentItemList) {
@@ -43,10 +42,8 @@ public class ExpandableRecyclerAdapterHelper {
                 }
 
                 // 添加LoadMore的数据.
-                if (parentListItem.isLoadMore())
-                    parentWrapperList.add(LoadMoreStatus.INIT);
+                if (parentListItem.isLoadMore()) parentWrapperList.add(LoadMoreStatus.INIT);
             }
-
         }
 
         return parentWrapperList;

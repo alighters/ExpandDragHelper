@@ -80,12 +80,11 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
      * Useful for implementing animations on expansion.
      *
      * @param expanded true if view is expanded before expansion is toggled,
-     *                 false if not
+     * false if not
      */
     public void onExpansionToggled(boolean expanded) {
 
     }
-
 
     /**
      * Getter for the {@link ParentListItemExpandCollapseListener} implemented in
@@ -100,10 +99,10 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
      * Setter for the {@link ParentListItemExpandCollapseListener} implemented in
      *
      * @param parentListItemExpandCollapseListener The
-     *                                             {@link ParentListItemExpandCollapseListener} to set on the {@link ParentViewHolder}
+     * {@link ParentListItemExpandCollapseListener} to set on the {@link ParentViewHolder}
      */
-    public void setParentListItemExpandCollapseListener(ParentListItemExpandCollapseListener
-                                                                parentListItemExpandCollapseListener) {
+    public void setParentListItemExpandCollapseListener(
+        ParentListItemExpandCollapseListener parentListItemExpandCollapseListener) {
         mParentListItemExpandCollapseListener = parentListItemExpandCollapseListener;
     }
 

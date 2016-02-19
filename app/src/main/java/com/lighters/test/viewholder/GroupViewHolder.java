@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.lighters.library.expanddrag.ViewHolder.ParentViewHolder;
 import com.lighters.test.R;
 import com.lighters.test.model.Group;
@@ -49,14 +48,12 @@ public class GroupViewHolder extends ParentViewHolder {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             RotateAnimation rotateAnimation;
             if (expanded) { // rotate clockwise
-                rotateAnimation = new RotateAnimation(ROTATED_POSITION,
-                        INITIAL_POSITION,
-                        RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                rotateAnimation =
+                    new RotateAnimation(ROTATED_POSITION, INITIAL_POSITION, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                         RotateAnimation.RELATIVE_TO_SELF, 0.5f);
             } else { // rotate counterclockwise
-                rotateAnimation = new RotateAnimation(-1 * ROTATED_POSITION,
-                        INITIAL_POSITION,
-                        RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                rotateAnimation =
+                    new RotateAnimation(-1 * ROTATED_POSITION, INITIAL_POSITION, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                         RotateAnimation.RELATIVE_TO_SELF, 0.5f);
             }
 
@@ -65,6 +62,4 @@ public class GroupViewHolder extends ParentViewHolder {
             mArrowExpandImageView.startAnimation(rotateAnimation);
         }
     }
-
-
 }

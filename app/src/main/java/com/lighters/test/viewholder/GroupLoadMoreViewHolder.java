@@ -2,7 +2,6 @@ package com.lighters.test.viewholder;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.ViewHolder.LoadMoreViewHolder;
 import com.lighters.test.R;

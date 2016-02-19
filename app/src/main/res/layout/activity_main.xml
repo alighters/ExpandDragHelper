@@ -11,23 +11,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activity.MainActivity">
 
-    <Button
-        android:id="@+id/btn_group"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="@string/expand_group"/>
+  <Button
+      android:id="@+id/btn_group"
+      android:layout_width="match_parent"
+      android:layout_height="56dp"
+      android:text="@string/expand_group"/>
 
-    <Button
-        android:id="@+id/btn_group_drag"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/expand_drag_group"/>
+  <Button
+      android:id="@+id/btn_group_drag"
+      android:layout_width="match_parent"
+      android:layout_height="56dp"
+      android:layout_marginTop="12dp"
+      android:text="@string/expand_drag_group"/>
 
-    <Button
-        android:id="@+id/btn_group_load_more"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/expand_drag_load_more_group"/>
+  <Button
+      android:id="@+id/btn_group_load_more"
+      android:layout_width="match_parent"
+      android:layout_height="56dp"
+      android:layout_marginTop="12dp"
+      android:text="@string/expand_drag_load_more_group"/>
 </LinearLayout>

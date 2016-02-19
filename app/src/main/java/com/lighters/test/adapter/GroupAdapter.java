@@ -5,14 +5,12 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.lighters.library.expanddrag.Adapter.ExpandableRecyclerAdapter;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.test.R;
 import com.lighters.test.model.Group;
 import com.lighters.test.viewholder.GroupViewHolder;
 import com.lighters.test.viewholder.ItemViewHolder;
-
 import java.util.List;
 
 public class GroupAdapter extends ExpandableRecyclerAdapter<GroupViewHolder, ItemViewHolder> {

@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
-
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
@@ -17,7 +16,6 @@ import com.lighters.library.expanddrag.callback.LoadMoreListener;
 import com.lighters.test.R;
 import com.lighters.test.adapter.GroupLoadMoreAdapter;
 import com.lighters.test.model.Group;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +29,6 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_loadmore);
 
-
         ArrayList<String> num1 = new ArrayList<>();
         num1.add("01");
         num1.add("02");
@@ -39,11 +36,11 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
         num1.add("04");
         num1.add("05");
         ArrayList<String> num2 = new ArrayList<>();
-//        num2.add("11");
-//        num2.add("12");
-//        num2.add("13");
-//        num2.add("14");
-//        num2.add("15");
+        //        num2.add("11");
+        //        num2.add("12");
+        //        num2.add("13");
+        //        num2.add("14");
+        //        num2.add("15");
         ArrayList<String> num3 = new ArrayList<>();
         num3.add("21");
         num3.add("22");
@@ -58,7 +55,6 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
         groups.add(quesadilla);
         groups.add(burger);
 
-
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new GroupLoadMoreAdapter(this, groups);
         mAdapter.setExpandCollapseListener(new ExpandCollapseListener() {
@@ -67,10 +63,7 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
                 Group expandedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.expanded, expandedGroup.getName());
-                Toast.makeText(GroupLoadMoreActivity.this,
-                        toastMsg,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(GroupLoadMoreActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -78,12 +71,8 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
                 Group collapsedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.collapsed, collapsedGroup.getName());
-                Toast.makeText(GroupLoadMoreActivity.this,
-                        toastMsg,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(GroupLoadMoreActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
             }
-
         });
 
         mAdapter.setDragSelectCallback(new DragSelectCallback() {
@@ -101,13 +90,16 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
 
             @Override
             public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
-                                       int toParentPosition) {
-                Toast.makeText(GroupLoadMoreActivity.this,
-                        "fromTotal=" + fromTotalPosition + ", fromParentPosition = " + fromParentPosition
-                                + ", fromChildOfParent= " + fromChildPositionOfParent + ",topostion = " +
-                                toParentPosition,
-                        Toast.LENGTH_LONG)
-                        .show();
+                int toParentPosition) {
+                Toast.makeText(GroupLoadMoreActivity.this, "fromTotal="
+                    + fromTotalPosition
+                    + ", fromParentPosition = "
+                    + fromParentPosition
+                    + ", fromChildOfParent= "
+                    + fromChildPositionOfParent
+                    + ",topostion = "
+                    +
+                    toParentPosition, Toast.LENGTH_LONG).show();
                 Group group = groups.get(fromParentPosition);
                 String ingredient = group.getChildItemList().get(fromChildPositionOfParent);
                 group.getChildItemList().remove(ingredient);
@@ -128,9 +120,9 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
                             int childSize = group.getChildItemList().size();
 
                             List<String> appendList = new ArrayList<String>();
-                            if (childSize > 10)
+                            if (childSize > 10) {
                                 group.setLoadMoreStatus(LoadMoreStatus.FINISH);
-                            else {
+                            } else {
                                 for (int i = 0; i < 5; i++)
                                     appendList.add(parentIndex + "" + (i + 1));
                                 group.getChildItemList().addAll(appendList);
@@ -140,7 +132,6 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
                         }
                     }
                 }, 2000);
-
             }
         });
 
@@ -153,8 +144,9 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!result) {
                     mAdapter.expandAllParents(1);
-                } else
+                } else {
                     mAdapter.collapseAllParents();
+                }
                 result = !result;
             }
         });
@@ -171,5 +163,4 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         mAdapter.onRestoreInstanceState(savedInstanceState);
     }
-
 }

@@ -6,12 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
-
 import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.test.R;
 import com.lighters.test.adapter.GroupAdapter;
 import com.lighters.test.model.Group;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,6 @@ public class GroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-
 
         final ArrayList<String> num1 = new ArrayList<>();
         num1.add("01");
@@ -51,7 +48,6 @@ public class GroupActivity extends AppCompatActivity {
         groups.add(group2);
         groups.add(group3);
 
-
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new GroupAdapter(this, groups);
         mAdapter.setExpandCollapseListener(new ExpandCollapseListener() {
@@ -60,10 +56,7 @@ public class GroupActivity extends AppCompatActivity {
                 Group expandedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.expanded, expandedGroup.getName());
-                Toast.makeText(GroupActivity.this,
-                        toastMsg,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(GroupActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -71,18 +64,13 @@ public class GroupActivity extends AppCompatActivity {
                 Group collapsedGroup = groups.get(position);
 
                 String toastMsg = getResources().getString(R.string.collapsed, collapsedGroup.getName());
-                Toast.makeText(GroupActivity.this,
-                        toastMsg,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(GroupActivity.this, toastMsg, Toast.LENGTH_SHORT).show();
             }
-
         });
 
         recyclerView.setAdapter(mAdapter);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-
     }
 
     @Override
@@ -96,5 +84,4 @@ public class GroupActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         mAdapter.onRestoreInstanceState(savedInstanceState);
     }
-
 }

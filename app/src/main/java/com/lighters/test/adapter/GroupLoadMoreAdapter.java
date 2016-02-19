@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.lighters.library.expanddrag.Adapter.ExpandDragRecyclerAdapter;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.test.R;
@@ -13,11 +12,10 @@ import com.lighters.test.model.Group;
 import com.lighters.test.viewholder.GroupLoadMoreViewHolder;
 import com.lighters.test.viewholder.GroupViewHolder;
 import com.lighters.test.viewholder.ItemViewHolder;
-
 import java.util.List;
 
-public class GroupLoadMoreAdapter extends ExpandDragRecyclerAdapter<GroupViewHolder, ItemViewHolder,
-        GroupLoadMoreViewHolder> {
+public class GroupLoadMoreAdapter
+    extends ExpandDragRecyclerAdapter<GroupViewHolder, ItemViewHolder, GroupLoadMoreViewHolder> {
 
     private LayoutInflater mInflator;
 
@@ -58,7 +56,7 @@ public class GroupLoadMoreAdapter extends ExpandDragRecyclerAdapter<GroupViewHol
 
     @Override
     public void onBindLoadMoreViewHolder(GroupLoadMoreViewHolder viewHolder, int position, int parentPosition,
-                                         Object object) {
+        Object object) {
         viewHolder.bind(parentPosition + "");
     }
 }

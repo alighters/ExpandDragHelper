@@ -24,6 +24,4 @@ public class ChildViewHolder extends RecyclerView.ViewHolder {
     public ChildViewHolder(final View itemView) {
         super(itemView);
     }
-
-
 }
