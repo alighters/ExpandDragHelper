@@ -2,6 +2,7 @@ package com.lighters.test.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +14,7 @@ import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.test.R;
 import com.lighters.test.adapter.GroupDragAdapter;
 import com.lighters.test.model.GroupDrag;
-import com.lighters.test.viewholder.GroupDragViewHolder;
+import com.lighters.test.viewholder.ItemViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class GroupDragActivity extends AppCompatActivity {
 
             @Override
             public void onListItemDrop(int fromTotalPosition, int fromParentPosition, int fromChildPositionOfParent,
-                int toParentPosition) {
+                final int toParentPosition) {
                 Toast.makeText(GroupDragActivity.this, "fromTotal="
                     + fromTotalPosition
                     + ", fromParentPosition = "
@@ -104,10 +105,15 @@ public class GroupDragActivity extends AppCompatActivity {
                 if (ingredient != null && toParentPosition >= 0 && toParentPosition < GroupDrags.size()) {
                     GroupDrags.get(toParentPosition).getChildItemList().add(0, ingredient);
                 }
-                GroupDragViewHolder viewHolder = mAdapter.getParentViewHolder(toParentPosition);
-                if (viewHolder != null) {
-                    viewHolder.setDragShow();
-                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ItemViewHolder viewHolder = mAdapter.getChildViewHolder(toParentPosition, 0);
+                        if (viewHolder != null) {
+                            viewHolder.setDragShow();
+                        }
+                    }
+                },100);
             }
 
             @Override

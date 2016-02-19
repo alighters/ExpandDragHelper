@@ -49,7 +49,8 @@ import java.util.List;
  * @version 1.0
  * @since 5/27/2015
  */
-public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, LVH extends LoadMoreViewHolder>
+public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, LVH
+    extends LoadMoreViewHolder>
     extends ExpandableRecyclerAdapter<PVH, CVH>
     implements View.OnDragListener, View.OnLongClickListener, View.OnTouchListener, View.OnClickListener {
 
@@ -651,13 +652,13 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @return the child position
      */
     public int getChildPositionByIndex(int parentIndex, int childIndex) {
-        int child = -1;
+        int parent = -1;
         for (int i = 0; i < mItemList.size(); i++) {
             Object listItem = mItemList.get(i);
             if (listItem instanceof ParentWrapper) {
-                child++;
-                if (child == parentIndex) {
-                    return i + childIndex;
+                parent++;
+                if (parent == parentIndex) {
+                    return i + 1 + childIndex;
                 }
             }
         }

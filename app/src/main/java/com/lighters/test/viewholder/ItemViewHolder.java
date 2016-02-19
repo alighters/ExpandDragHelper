@@ -1,5 +1,6 @@
 package com.lighters.test.viewholder;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 import com.lighters.library.expanddrag.ViewHolder.ChildViewHolder;
@@ -17,4 +18,20 @@ public class ItemViewHolder extends ChildViewHolder {
     public void bind(String ingredient) {
         mIngredientTextView.setText(ingredient.toString());
     }
+
+
+    /**
+     * 显示拖拽的效果
+     */
+    public void setDragShow() {
+        mIngredientTextView.setTextColor(Color.BLUE);
+        mIngredientTextView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mIngredientTextView.setTextColor(Color.BLACK);
+            }
+        }, 3000);
+    }
+
+
 }
