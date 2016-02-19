@@ -1,6 +1,7 @@
 package com.lighters.test.viewholder;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.animation.RotateAnimation;
@@ -61,5 +62,18 @@ public class GroupDragViewHolder extends ParentViewHolder {
             rotateAnimation.setFillAfter(true);
             mArrowExpandImageView.startAnimation(rotateAnimation);
         }
+    }
+
+    /**
+     * 显示拖拽的效果
+     */
+    public void setDragShow() {
+        mRecipeTextView.setTextColor(Color.BLUE);
+        mRecipeTextView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRecipeTextView.setTextColor(Color.BLACK);
+            }
+        }, 3000);
     }
 }

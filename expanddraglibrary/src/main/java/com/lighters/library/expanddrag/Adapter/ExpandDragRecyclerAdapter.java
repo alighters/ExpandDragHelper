@@ -19,7 +19,6 @@ import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 import com.lighters.library.expanddrag.Model.ParentListItem;
 import com.lighters.library.expanddrag.Model.ParentWrapper;
@@ -28,7 +27,6 @@ import com.lighters.library.expanddrag.ViewHolder.LoadMoreViewHolder;
 import com.lighters.library.expanddrag.ViewHolder.ParentViewHolder;
 import com.lighters.library.expanddrag.callback.DragSelectCallback;
 import com.lighters.library.expanddrag.callback.LoadMoreListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -133,7 +131,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
             loadMoreViewHolder.itemView.setTag(position);
             loadMoreViewHolder.itemView.setOnClickListener(this);
             loadMoreViewHolder.update((LoadMoreStatus) listItem);
-            onBindLoadMoreViewHolder((LVH) holder, position, getParentPosition(position), listItem);
+            onBindLoadMoreViewHolder((LVH) holder, position, getParentIndex(position), listItem);
         } else if (listItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
         } else {
@@ -336,18 +334,59 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * These calls to the ParentViewHolder are made so that animations can be
      * triggered at the ViewHolder level.
      *
-     * @param parentIndex The index of the parent to collapse
+     * @param parentPosition The index of the parent to collapse
      */
-    protected void collapseParentViews(ParentWrapper parentWrapper, int parentIndex) {
+    protected void collapseParentViews(ParentWrapper parentWrapper, int parentPosition) {
         PVH viewHolder;
         for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
-            viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentIndex);
+            viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentPosition);
             if (viewHolder != null && viewHolder.isExpanded()) {
                 viewHolder.setExpanded(false);
-                viewHolder.itemView.setTag(parentIndex);
+                viewHolder.itemView.setTag(parentPosition);
                 viewHolder.onExpansionToggled(true);
             }
         }
+    }
+
+    /**
+     * Get the parent view holder
+     *
+     * @param parentIndex the index of the parent
+     * @return the parentViewHolder
+     */
+    public PVH getParentViewHolder(int parentIndex) {
+        int parentPosition = getParentPositionByIndex(parentIndex);
+        PVH viewHolder = null;
+        if (parentPosition >= 0) {
+            for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
+                viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(parentPosition);
+                if (viewHolder != null) {
+                    return viewHolder;
+                }
+            }
+        }
+        return viewHolder;
+    }
+
+    /**
+     * Get the parent view holder.
+     *
+     * @param parentIndex the index of the parent
+     * @param childIndex the index of the child
+     * @return the child view holder
+     */
+    public CVH getChildViewHolder(int parentIndex, int childIndex) {
+        int childPosition = getChildPositionByIndex(parentIndex, childIndex);
+        CVH viewHolder = null;
+        if (childPosition >= 0) {
+            for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
+                viewHolder = (CVH) recyclerView.findViewHolderForAdapterPosition(childPosition);
+                if (viewHolder != null) {
+                    return viewHolder;
+                }
+            }
+        }
+        return viewHolder;
     }
 
     /**
@@ -534,9 +573,12 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     // endregion
 
     /**
-     * Get the parent position of the child.
+     * Get the parent index by the item position
+     *
+     * @param position the position of item list
+     * @return the parent index
      */
-    private int getParentPosition(int position) {
+    public int getParentIndex(int position) {
         int parent = -1;
         for (int i = 0; i < mItemList.size(); i++) {
             Object listItem = mItemList.get(i);
@@ -546,6 +588,47 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
             if (i >= position) break;
         }
         return parent;
+    }
+
+    /**
+     * Get the parent position by the parent index.
+     *
+     * @param parentIndex the index of the parent.
+     * @return the parent postion
+     */
+    public int getParentPositionByIndex(int parentIndex) {
+        int parent = -1;
+        for (int i = 0; i < mItemList.size(); i++) {
+            Object listItem = mItemList.get(i);
+            if (listItem instanceof ParentWrapper) {
+                parent++;
+                if (parent == parentIndex) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 根据指定的Index获取对应的parent以及child的索引
+     *
+     * @param parentIndex the index of parent
+     * @param childIndex the index of position
+     * @return the child position
+     */
+    public int getChildPositionByIndex(int parentIndex, int childIndex) {
+        int child = -1;
+        for (int i = 0; i < mItemList.size(); i++) {
+            Object listItem = mItemList.get(i);
+            if (listItem instanceof ParentWrapper) {
+                child++;
+                if (child == parentIndex) {
+                    return i + childIndex;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -748,7 +831,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     public void onClick(View v) {
         if (v.getTag() != null && mLoadMoreListener != null) {
             int position = Integer.valueOf(v.getTag().toString());
-            int parentPosition = getParentPosition(position);
+            int parentPosition = getParentIndex(position);
             if (parentPosition > -1 && parentPosition < mParentItemList.size()) {
                 if (mParentItemList.get(parentPosition).getLoadingStatus() != LoadMoreStatus.FINISH) {
                     mParentItemList.get(parentPosition).setLoadMoreStatus(LoadMoreStatus.LOADING);

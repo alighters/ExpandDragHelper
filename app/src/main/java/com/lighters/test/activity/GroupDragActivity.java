@@ -13,6 +13,7 @@ import com.lighters.library.expanddrag.callback.ExpandCollapseListener;
 import com.lighters.test.R;
 import com.lighters.test.adapter.GroupDragAdapter;
 import com.lighters.test.model.GroupDrag;
+import com.lighters.test.viewholder.GroupDragViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,6 +104,10 @@ public class GroupDragActivity extends AppCompatActivity {
                 if (ingredient != null && toParentPosition >= 0 && toParentPosition < GroupDrags.size()) {
                     GroupDrags.get(toParentPosition).getChildItemList().add(0, ingredient);
                 }
+                GroupDragViewHolder viewHolder = mAdapter.getParentViewHolder(toParentPosition);
+                if (viewHolder != null) {
+                    viewHolder.setDragShow();
+                }
             }
 
             @Override
@@ -110,6 +115,11 @@ public class GroupDragActivity extends AppCompatActivity {
                 super.onStartDrag(fromPosition, fromParentPosition, offsetOfParent);
                 Toast.makeText(GroupDragActivity.this, "DragStart: fromParentPosition = " + fromParentPosition,
                     Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onEndDrag() {
+                super.onEndDrag();
             }
         });
 
