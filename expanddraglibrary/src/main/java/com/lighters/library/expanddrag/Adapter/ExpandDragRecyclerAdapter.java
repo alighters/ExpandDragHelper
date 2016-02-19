@@ -667,7 +667,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-        int toPosition = Integer.valueOf(v.getTag().toString());
+        final int toPosition = Integer.valueOf(v.getTag().toString());
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_INTENT)) {
@@ -691,14 +691,21 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
                     Intent intent = item.getIntent();
                     if (intent != null && intent.hasExtra(FROM_POSITION)) {
                         int fromPosition = intent.getIntExtra(FROM_POSITION, 0);
-                        int fromParentPosition = intent.getIntExtra(FROM_PARENT_POSITION, 0);
-                        int fromChildPositionOfParent = intent.getIntExtra(FROM_CHILD_POSITION, 0);
+                        final int fromParentPosition = intent.getIntExtra(FROM_PARENT_POSITION, 0);
+                        final int fromChildPositionOfParent = intent.getIntExtra(FROM_CHILD_POSITION, 0);
                         mDragSelectCallback.onListItemDrop(fromPosition, fromParentPosition, fromChildPositionOfParent,
                             toPosition);
-                    }
-                    mDragSelectCallback.onListItemUnSelected(v, toPosition);
+                        mDragSelectCallback.onListItemUnSelected(v, toPosition);
 
-                    expandParentItems(mExpandedList, Integer.valueOf(v.getTag().toString()));
+                        expandParentItems(mExpandedList, Integer.valueOf(v.getTag().toString()));
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDragSelectCallback.onListItemMoveEnd(fromParentPosition, fromChildPositionOfParent,
+                                    toPosition);
+                            }
+                        });
+                    }
                 }
                 return true;
             case DragEvent.ACTION_DRAG_ENDED:

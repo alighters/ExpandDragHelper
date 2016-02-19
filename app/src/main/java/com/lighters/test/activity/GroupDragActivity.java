@@ -2,7 +2,6 @@ package com.lighters.test.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,15 +104,15 @@ public class GroupDragActivity extends AppCompatActivity {
                 if (ingredient != null && toParentPosition >= 0 && toParentPosition < GroupDrags.size()) {
                     GroupDrags.get(toParentPosition).getChildItemList().add(0, ingredient);
                 }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ItemViewHolder viewHolder = mAdapter.getChildViewHolder(toParentPosition, 0);
-                        if (viewHolder != null) {
-                            viewHolder.setDragShow();
-                        }
-                    }
-                },100);
+            }
+
+            @Override
+            public void onListItemMoveEnd(int fromParentIndex, int fromChildIndexOfParent, int toParentIndex) {
+                super.onListItemMoveEnd(fromParentIndex, fromChildIndexOfParent, toParentIndex);
+                ItemViewHolder viewHolder = mAdapter.getChildViewHolder(toParentIndex, 0);
+                if (viewHolder != null) {
+                    viewHolder.setDragShow();
+                }
             }
 
             @Override
