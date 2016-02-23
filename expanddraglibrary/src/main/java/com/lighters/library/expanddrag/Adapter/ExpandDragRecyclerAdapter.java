@@ -141,10 +141,10 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
         } else if (listItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
         } else {
-            onBindChildViewHolder((CVH) holder, position, listItem);
             holder.itemView.setTag(position);
             holder.itemView.setOnLongClickListener(this);
             holder.itemView.setOnTouchListener(this);
+            onBindChildViewHolder((CVH) holder, position, listItem);
         }
     }
 
