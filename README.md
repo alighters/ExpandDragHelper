@@ -1,5 +1,25 @@
 # ExpandDragHelper
 
+The drag to collapsed items and support to load more items.
+
+# Demo
+![](http://7xpyth.com1.z0.glb.clouddn.com/drag_to_collapse.gif)
+
+# Usage
+### Add denpendency
+	allprojects {
+		repositories {
+			...
+			maven { url "https://jitpack.io" }
+		}
+	}
+	dependencies {
+	    compile 'com.github.david-wei:ExpandDragHelper:1.0.1'
+	}
+
+# Inspiration
+[expandable-recycler-view](https://github.com/bignerdranch/expandable-recycler-view)
+
 
 License
 -------
