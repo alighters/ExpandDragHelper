@@ -67,6 +67,7 @@ build
 # .idea/uiDesigner.xml
 
 # Gradle:
+.idea
 # .idea/gradle.xml
 # .idea/libraries
 
