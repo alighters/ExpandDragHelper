@@ -78,8 +78,8 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * {@link ExpandableRecyclerAdapter}
      *
      * @param parentItemList List of all {@link ParentListItem} objects to be
-     * displayed in the RecyclerView that this
-     * adapter is linked to
+     *                       displayed in the RecyclerView that this
+     *                       adapter is linked to
      */
     public ExpandDragRecyclerAdapter(@NonNull List<? extends ParentListItem> parentItemList) {
         super(parentItemList);
@@ -92,8 +92,8 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * or {@link #onCreateChildViewHolder(ViewGroup)}.
      *
      * @param viewGroup The {@link ViewGroup} into which the new {@link View}
-     * will be added after it is bound to an adapter position.
-     * @param viewType The view type of the new {@code android.view.View}.
+     *                  will be added after it is bound to an adapter position.
+     * @param viewType  The view type of the new {@code android.view.View}.
      * @return A new RecyclerView.ViewHolder
      * that holds a {@code android.view.View} of the given view type.
      */
@@ -113,10 +113,10 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * {@link #onBindParentViewHolder(ParentViewHolder, int, ParentListItem)}
      * or {@link #onBindChildViewHolder(ChildViewHolder, int, Object)}.
      *
-     * @param holder The RecyclerView.ViewHolder to bind data to
+     * @param holder   The RecyclerView.ViewHolder to bind data to
      * @param position The index in the list at which to bind
      * @throws IllegalStateException if the item in the list is either null or
-     * not of type {@link ParentListItem}
+     *                               not of type {@link ParentListItem}
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -218,7 +218,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * expand the specific parent items.
      *
-     * @param list the parent item list to be expand.
+     * @param list       the parent item list to be expand.
      * @param selectItem current selected items.
      */
     public void expandParentItems(List<Integer> list, int selectItem) {
@@ -269,7 +269,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * instance state was stored.
      *
      * @param savedInstanceState The {@code Bundle} from which the expanded
-     * state map is loaded
+     *                           state map is loaded
      */
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -406,7 +406,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * Get the parent view holder.
      *
      * @param parentIndex the index of the parent
-     * @param childIndex the index of the child
+     * @param childIndex  the index of the child
      * @return the child view holder
      */
     public CVH getChildViewHolder(int parentIndex, int childIndex) {
@@ -428,10 +428,10 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * ExpandCollapseListener and adds children of the specified parent to the
      * total list of items.
      *
-     * @param parentWrapper The ParentWrapper of the parent to expand
-     * @param parentIndex The index of the parent to expand
+     * @param parentWrapper                     The ParentWrapper of the parent to expand
+     * @param parentIndex                       The index of the parent to expand
      * @param expansionTriggeredByListItemClick true if expansion was triggered
-     * by a click event, false otherwise.
+     *                                          by a click event, false otherwise.
      */
 
     @Override
@@ -467,10 +467,10 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * ExpandCollapseListener and adds children of the specified parent to the
      * total list of items.
      *
-     * @param parentWrapper The ParentWrapper of the parent to collapse
-     * @param parentIndex The index of the parent to collapse
+     * @param parentWrapper                    The ParentWrapper of the parent to collapse
+     * @param parentIndex                      The index of the parent to collapse
      * @param collapseTriggeredByListItemClick true if expansion was triggered
-     * by a click event, false otherwise.
+     *                                         by a click event, false otherwise.
      */
     @Override
     public void collapseParentListItem(ParentWrapper parentWrapper, int parentIndex,
@@ -513,9 +513,9 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * positions may be altered.
      *
      * @param parentPosition Position of the ParentListItem which has been added a child, relative
-     * to list of ParentListItems only.
-     * @param childPosition Position of the child object that has been inserted, relative to children
-     * of the ParentListItem specified by {@code parentPosition} only.
+     *                       to list of ParentListItems only.
+     * @param childPosition  Position of the child object that has been inserted, relative to children
+     *                       of the ParentListItem specified by {@code parentPosition} only.
      */
     @Override
     public void notifyChildItemInserted(int parentPosition, int childPosition) {
@@ -532,12 +532,12 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * data set are still considered up to date and will not be rebound, though their
      * positions may be altered.
      *
-     * @param parentPosition Position of the ParentListItem which has been added a child, relative
-     * to list of ParentListItems only.
+     * @param parentPosition     Position of the ParentListItem which has been added a child, relative
+     *                           to list of ParentListItems only.
      * @param childPositionStart Position of the first child object that has been inserted,
-     * relative to children of the ParentListItem specified by
-     * {@code parentPosition} only.
-     * @param itemCount number of children inserted
+     *                           relative to children of the ParentListItem specified by
+     *                           {@code parentPosition} only.
+     * @param itemCount          number of children inserted
      */
     @Override
     public void notifyChildItemRangeInserted(int parentPosition, int childPositionStart, int itemCount) {
@@ -584,9 +584,9 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * reflection of the set of {@code itemCount} child objects starting at {@code childPositionStart}
      * are out of date and should be updated.
      *
-     * @param parentPosition Position of the ParentListItem who has a child that has changed
+     * @param parentPosition     Position of the ParentListItem who has a child that has changed
      * @param childPositionStart Position of the first child object that has changed
-     * @param itemCount number of child objects changed
+     * @param itemCount          number of child objects changed
      */
     @Override
     public void notifyChildItemRangeChanged(int parentPosition, int childPositionStart, int itemCount) {
@@ -648,7 +648,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      * 根据指定的Index获取对应的parent以及child的索引
      *
      * @param parentIndex the index of parent
-     * @param childIndex the index of position
+     * @param childIndex  the index of position
      * @return the child position
      */
     public int getChildPositionByIndex(int parentIndex, int childIndex) {
@@ -670,9 +670,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
         final int toPosition = Integer.valueOf(v.getTag().toString());
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
-                if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_INTENT)) {
-                    return true;
-                }
+                return true;
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (mDragSelectCallback != null) {
                     mDragSelectCallback.onListItemSelected(v, toPosition);
@@ -686,7 +684,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
             case DragEvent.ACTION_DRAG_LOCATION:
                 return true;
             case DragEvent.ACTION_DROP:
-                if (mDragSelectCallback != null) {
+                if (mDragSelectCallback != null && event.getClipData() != null) {
                     ClipData.Item item = event.getClipData().getItemAt(0);
                     Intent intent = item.getIntent();
                     if (intent != null && intent.hasExtra(FROM_POSITION)) {
