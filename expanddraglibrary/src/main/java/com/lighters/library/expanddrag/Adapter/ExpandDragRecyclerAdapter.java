@@ -2,7 +2,6 @@ package com.lighters.library.expanddrag.Adapter;
 
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -49,8 +48,8 @@ import java.util.List;
  * @version 1.0
  * @since 5/27/2015
  */
-public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, LVH
-    extends LoadMoreViewHolder>
+public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, LVH extends
+    LoadMoreViewHolder>
     extends ExpandableRecyclerAdapter<PVH, CVH>
     implements View.OnDragListener, View.OnLongClickListener, View.OnTouchListener, View.OnClickListener {
 
@@ -435,8 +434,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      */
 
     @Override
-    public void expandParentListItem(ParentWrapper parentWrapper, int parentIndex,
-        boolean expansionTriggeredByListItemClick) {
+    public void expandParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean expansionTriggeredByListItemClick) {
         if (!parentWrapper.isExpanded()) {
             parentWrapper.setExpanded(true);
 
@@ -448,8 +446,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
                 }
                 if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
                     childListItemCount += 1;
-                    mItemList.add(parentIndex + childListItemCount,
-                        parentWrapper.getParentListItem().getLoadingStatus());
+                    mItemList.add(parentIndex + childListItemCount, parentWrapper.getParentListItem().getLoadingStatus());
                 }
 
                 notifyItemRangeInserted(parentIndex + 1, childListItemCount);
@@ -473,8 +470,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
      *                                         by a click event, false otherwise.
      */
     @Override
-    public void collapseParentListItem(ParentWrapper parentWrapper, int parentIndex,
-        boolean collapseTriggeredByListItemClick) {
+    public void collapseParentListItem(ParentWrapper parentWrapper, int parentIndex, boolean collapseTriggeredByListItemClick) {
         if (parentWrapper.isExpanded()) {
             parentWrapper.setExpanded(false);
 
@@ -555,7 +551,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
             // check this parent item did or not have the
             int count = itemCount;
             if (parentListItem.isLoadMore()) {
-                int p = parentWrapperIndex + childPositionStart + 1 + itemCount;
+                int p = parentWrapperIndex + parentListItem.getChildItemList().size() + 1;
                 if (p >= 0 && p < mItemList.size() && mItemList.get(p) instanceof LoadMoreStatus) {
                     // do nothing
                 } else {
@@ -565,8 +561,8 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
             }
             notifyItemRangeInserted(parentWrapperIndex + childPositionStart + 1, count);
 
-            if (parentWrapper.getParentListItem() != null && parentWrapper.getParentListItem().isLoadMore()) {
-                int p = parentWrapperIndex + childPositionStart + 1 + itemCount;
+            if (parentListItem.isLoadMore()) {
+                int p = parentWrapperIndex + parentListItem.getChildItemList().size() + 1;
                 if (p >= 0 && p < mItemList.size() && mItemList.get(p) instanceof LoadMoreStatus) {
                     mItemList.set(p, parentWrapper.getParentListItem().getLoadingStatus());
                     notifyItemChanged(p);
@@ -699,8 +695,7 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
                         new Handler().post(new Runnable() {
                             @Override
                             public void run() {
-                                mDragSelectCallback.onListItemMoveEnd(fromParentPosition, fromChildPositionOfParent,
-                                    toPosition);
+                                mDragSelectCallback.onListItemMoveEnd(fromParentPosition, fromChildPositionOfParent, toPosition);
                             }
                         });
                     }
