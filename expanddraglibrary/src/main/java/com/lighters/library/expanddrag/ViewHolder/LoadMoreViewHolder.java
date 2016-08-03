@@ -2,7 +2,6 @@ package com.lighters.library.expanddrag.ViewHolder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 import com.lighters.library.expanddrag.Model.LoadMoreStatus;
 
 /**
@@ -25,7 +24,27 @@ public abstract class LoadMoreViewHolder extends RecyclerView.ViewHolder {
      */
     public LoadMoreViewHolder(final View itemView) {
         super(itemView);
+        itemView.setOnClickListener(mOnClickListener);
     }
 
+    private LoadMoreCallback mLoadMoreCallback;
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mLoadMoreCallback != null) {
+                mLoadMoreCallback.loadMore(getLayoutPosition());
+            }
+        }
+    };
+
     public abstract void update(LoadMoreStatus status);
+
+    public void setLoadMoreCallback(LoadMoreCallback loadMoreCallback) {
+        mLoadMoreCallback = loadMoreCallback;
+    }
+
+    public interface LoadMoreCallback {
+        void loadMore(int position);
+    }
 }

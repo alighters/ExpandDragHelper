@@ -29,7 +29,7 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_loadmore);
 
-        ArrayList<String> num1 = new ArrayList<>();
+        final ArrayList<String> num1 = new ArrayList<>();
         num1.add("01");
         num1.add("02");
         num1.add("03");
@@ -142,11 +142,13 @@ public class GroupLoadMoreActivity extends AppCompatActivity {
         findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!result) {
-                    mAdapter.expandAllParents(1);
-                } else {
-                    mAdapter.collapseAllParents();
-                }
+                num1.remove(0);
+                mAdapter.notifyChildItemRemoved(0, 0);
+                //if (!result) {
+                //    mAdapter.expandAllParents(1);
+                //} else {
+                //    mAdapter.collapseAllParents();
+                //}
                 result = !result;
             }
         });

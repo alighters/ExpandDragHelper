@@ -50,8 +50,7 @@ import java.util.List;
  */
 public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, LVH extends
     LoadMoreViewHolder>
-    extends ExpandableRecyclerAdapter<PVH, CVH>
-    implements View.OnDragListener, View.OnLongClickListener, View.OnTouchListener, View.OnClickListener {
+    extends ExpandableRecyclerAdapter<PVH, CVH> implements View.OnDragListener, View.OnLongClickListener, View.OnTouchListener {
 
     //private static final String TAG = ExpandDragRecyclerAdapter.class.getName() + "_tag";
 
@@ -99,7 +98,9 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == TYPE_LOAD_MORE) {
-            return onCreateLoadMoreViewHolder(viewGroup);
+            LoadMoreViewHolder loadMoreViewHolder = onCreateLoadMoreViewHolder(viewGroup);
+            loadMoreViewHolder.setLoadMoreCallback(mLoadMoreCallback);
+            return loadMoreViewHolder;
         } else {
             return super.onCreateViewHolder(viewGroup, viewType);
         }
@@ -133,8 +134,6 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
             onBindParentViewHolder(parentViewHolder, position, parentWrapper.getParentListItem());
         } else if (listItem != null && listItem instanceof LoadMoreStatus) {
             LVH loadMoreViewHolder = (LVH) holder;
-            loadMoreViewHolder.itemView.setTag(position);
-            loadMoreViewHolder.itemView.setOnClickListener(this);
             loadMoreViewHolder.update((LoadMoreStatus) listItem);
             onBindLoadMoreViewHolder((LVH) holder, position, getParentIndex(position), listItem);
         } else if (listItem == null) {
@@ -873,19 +872,20 @@ public abstract class ExpandDragRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * The load more item view click event.
      */
-    @Override
-    public void onClick(View v) {
-        if (v.getTag() != null && mLoadMoreListener != null) {
-            int position = Integer.valueOf(v.getTag().toString());
-            int parentPosition = getParentIndex(position);
-            if (parentPosition > -1 && parentPosition < mParentItemList.size()) {
-                if (mParentItemList.get(parentPosition).getLoadingStatus() != LoadMoreStatus.FINISH) {
-                    mParentItemList.get(parentPosition).setLoadMoreStatus(LoadMoreStatus.LOADING);
-                    mItemList.set(position, LoadMoreStatus.LOADING);
-                    notifyItemChanged(position);
-                    mLoadMoreListener.loadMore(parentPosition);
+    LoadMoreViewHolder.LoadMoreCallback mLoadMoreCallback = new LoadMoreViewHolder.LoadMoreCallback() {
+        @Override
+        public void loadMore(int position) {
+            if (position >= 0 && position < mItemList.size()) {
+                int parentPosition = getParentIndex(position);
+                if (parentPosition > -1 && parentPosition < mParentItemList.size()) {
+                    if (mParentItemList.get(parentPosition).getLoadingStatus() != LoadMoreStatus.FINISH) {
+                        mParentItemList.get(parentPosition).setLoadMoreStatus(LoadMoreStatus.LOADING);
+                        mItemList.set(position, LoadMoreStatus.LOADING);
+                        notifyItemChanged(position);
+                        mLoadMoreListener.loadMore(parentPosition);
+                    }
                 }
             }
         }
-    }
+    };
 }
